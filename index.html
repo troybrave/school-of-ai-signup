@@ -64,18 +64,18 @@
       position: absolute;
       inset: -3px;
       border-radius: 9999px;
-      background: linear-gradient(90deg,
-        #AF52DE 0%,
-        #FF2D92 10%,
-        #FF6482 20%,
-        #FF9500 30%,
-        #FFD60A 40%,
-        #30D158 50%,
-        #2EC4B6 60%,
-        #40CBF0 70%,
-        #007AFF 80%,
-        #5856D6 90%,
-        #AF52DE 100%
+      background: conic-gradient(from 180deg,
+        #AF52DE 0deg,
+        #FF2D92 52deg,
+        #FF6482 82deg,
+        #FF9500 94deg,
+        #FFD60A 124deg,
+        #30D158 180deg,
+        #2EC4B6 236deg,
+        #40CBF0 266deg,
+        #007AFF 278deg,
+        #5856D6 308deg,
+        #AF52DE 360deg
       );
       filter: blur(14px);
       opacity: 0.44;
@@ -102,18 +102,18 @@
       inset: 0;
       border-radius: 9999px;
       padding: 1px;
-      background: linear-gradient(90deg,
-        #AF52DE 0%,
-        #FF2D92 10%,
-        #FF6482 20%,
-        #FF9500 30%,
-        #FFD60A 40%,
-        #30D158 50%,
-        #2EC4B6 60%,
-        #40CBF0 70%,
-        #007AFF 80%,
-        #5856D6 90%,
-        #AF52DE 100%
+      background: conic-gradient(from 180deg,
+        #AF52DE 0deg,
+        #FF2D92 52deg,
+        #FF6482 82deg,
+        #FF9500 94deg,
+        #FFD60A 124deg,
+        #30D158 180deg,
+        #2EC4B6 236deg,
+        #40CBF0 266deg,
+        #007AFF 278deg,
+        #5856D6 308deg,
+        #AF52DE 360deg
       );
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -189,13 +189,30 @@
     .phone-prefix {
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding-left: 16px;
+      padding-left: 12px;
+      flex-shrink: 0;
+    }
+
+    .country-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      border: none;
       color: rgba(255, 255, 255, 0.8);
       font-size: 16px;
-      cursor: default;
-      user-select: none;
-      flex-shrink: 0;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      padding: 0 4px 0 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18 9C18 9 13.5811 15 12 15C10.4188 15 6 9 6 9' stroke='rgba(255,255,255,0.8)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right center;
+      padding-right: 16px;
+    }
+
+    .country-select option {
+      background: #1a1a2e;
+      color: white;
     }
 
     .phone-input {
@@ -287,10 +304,7 @@
           <div>
             <div class="phone-wrapper" id="phone-wrapper">
               <div class="phone-prefix">
-                <span>+1</span>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                  <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="white" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <select id="country-code" class="country-select" aria-label="Country code"></select>
               </div>
               <input type="tel" name="phone" class="phone-input" placeholder="Phone Number" required>
             </div>
@@ -378,16 +392,82 @@
       input.addEventListener('input', () => clearError(input));
     });
 
-    // Phone formatting
+    // Country codes
+    const countryCodes = [
+      { code: '+1', label: '🇺🇸 +1', name: 'US' },
+      { code: '+1', label: '🇨🇦 +1', name: 'CA' },
+      { code: '+44', label: '🇬🇧 +44', name: 'GB' },
+      { code: '+61', label: '🇦🇺 +61', name: 'AU' },
+      { code: '+49', label: '🇩🇪 +49', name: 'DE' },
+      { code: '+33', label: '🇫🇷 +33', name: 'FR' },
+      { code: '+91', label: '🇮🇳 +91', name: 'IN' },
+      { code: '+81', label: '🇯🇵 +81', name: 'JP' },
+      { code: '+86', label: '🇨🇳 +86', name: 'CN' },
+      { code: '+82', label: '🇰🇷 +82', name: 'KR' },
+      { code: '+55', label: '🇧🇷 +55', name: 'BR' },
+      { code: '+52', label: '🇲🇽 +52', name: 'MX' },
+      { code: '+234', label: '🇳🇬 +234', name: 'NG' },
+      { code: '+27', label: '🇿🇦 +27', name: 'ZA' },
+      { code: '+254', label: '🇰🇪 +254', name: 'KE' },
+      { code: '+971', label: '🇦🇪 +971', name: 'AE' },
+      { code: '+966', label: '🇸🇦 +966', name: 'SA' },
+      { code: '+65', label: '🇸🇬 +65', name: 'SG' },
+      { code: '+31', label: '🇳🇱 +31', name: 'NL' },
+      { code: '+46', label: '🇸🇪 +46', name: 'SE' },
+      { code: '+47', label: '🇳🇴 +47', name: 'NO' },
+      { code: '+34', label: '🇪🇸 +34', name: 'ES' },
+      { code: '+39', label: '🇮🇹 +39', name: 'IT' },
+      { code: '+41', label: '🇨🇭 +41', name: 'CH' },
+      { code: '+48', label: '🇵🇱 +48', name: 'PL' },
+      { code: '+63', label: '🇵🇭 +63', name: 'PH' },
+      { code: '+60', label: '🇲🇾 +60', name: 'MY' },
+      { code: '+66', label: '🇹🇭 +66', name: 'TH' },
+      { code: '+62', label: '🇮🇩 +62', name: 'ID' },
+      { code: '+84', label: '🇻🇳 +84', name: 'VN' },
+      { code: '+20', label: '🇪🇬 +20', name: 'EG' },
+      { code: '+233', label: '🇬🇭 +233', name: 'GH' },
+      { code: '+256', label: '🇺🇬 +256', name: 'UG' },
+      { code: '+255', label: '🇹🇿 +255', name: 'TZ' },
+      { code: '+353', label: '🇮🇪 +353', name: 'IE' },
+      { code: '+64', label: '🇳🇿 +64', name: 'NZ' },
+      { code: '+972', label: '🇮🇱 +972', name: 'IL' },
+      { code: '+90', label: '🇹🇷 +90', name: 'TR' },
+      { code: '+7', label: '🇷🇺 +7', name: 'RU' },
+      { code: '+380', label: '🇺🇦 +380', name: 'UA' },
+      { code: '+57', label: '🇨🇴 +57', name: 'CO' },
+      { code: '+56', label: '🇨🇱 +56', name: 'CL' },
+      { code: '+54', label: '🇦🇷 +54', name: 'AR' },
+      { code: '+51', label: '🇵🇪 +51', name: 'PE' },
+      { code: '+880', label: '🇧🇩 +880', name: 'BD' },
+      { code: '+92', label: '🇵🇰 +92', name: 'PK' },
+      { code: '+94', label: '🇱🇰 +94', name: 'LK' },
+      { code: '+977', label: '🇳🇵 +977', name: 'NP' },
+    ];
+
+    const countrySelect = document.getElementById('country-code');
+    countryCodes.forEach((c, i) => {
+      const opt = document.createElement('option');
+      opt.value = c.code;
+      opt.textContent = c.label;
+      if (i === 0) opt.selected = true;
+      countrySelect.appendChild(opt);
+    });
+
+    // Phone formatting (US/CA style when +1, otherwise just digits)
     const phoneInput = form.querySelector('input[name="phone"]');
     phoneInput.addEventListener('input', (e) => {
       let digits = e.target.value.replace(/\D/g, '');
-      if (digits.length > 10) digits = digits.slice(0, 10);
-      if (digits.length >= 7) {
-        e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
-      } else if (digits.length >= 4) {
-        e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3)}`;
-      } else if (digits.length > 0) {
+      if (countrySelect.value === '+1') {
+        if (digits.length > 10) digits = digits.slice(0, 10);
+        if (digits.length >= 7) {
+          e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+        } else if (digits.length >= 4) {
+          e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+        } else if (digits.length > 0) {
+          e.target.value = digits;
+        }
+      } else {
+        if (digits.length > 15) digits = digits.slice(0, 15);
         e.target.value = digits;
       }
     });
@@ -423,7 +503,7 @@
         lastName: lastName.value.trim(),
         name: `${firstName.value.trim()} ${lastName.value.trim()}`,
         email: email.value.trim(),
-        phone: `+1${phoneDigits}`,
+        phone: `${countrySelect.value}${phoneDigits}`,
         companyName: organization.value.trim(),
         source: 'School of AI Signup Page',
         tags: ['school-of-ai']
