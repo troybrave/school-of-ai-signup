@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School of AI - Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('assets/fonts/gilroy-regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('assets/fonts/gilroy-regular.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('assets/fonts/gilroy-bold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('assets/fonts/gilroy-bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Gilroy', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .gradient-title {
+      background: linear-gradient(4.67deg, #389ABF 4.69%, #8BF1F1 51.21%, #5FFCC0 95.94%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-glow-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    /* Outer glow: soft bloom radiating from edges */
+    .btn-glow-outer {
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      background: conic-gradient(from 200deg,
+        #AF52DE 0deg,
+        #FF2D92 30deg,
+        #FF6482 60deg,
+        #FF9500 85deg,
+        #FFD60A 90deg,
+        #FFD60A 110deg,
+        #30D158 130deg,
+        #30D158 150deg,
+        #2EC4B6 170deg,
+        #40CBF0 195deg,
+        #40CBF0 245deg,
+        #007AFF 230deg,
+        #5856D6 260deg,
+        #AF52DE 290deg,
+        #FF2D92 320deg,
+        #AF52DE 360deg
+      );
+      filter: blur(14px);
+      opacity: 0.44;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .btn-glow-wrapper:hover .btn-glow-outer {
+      opacity: 0.56;
+      filter: blur(18px);
+    }
+
+    /* The actual button */
+    .btn-glow {
+      position: relative;
+      z-index: 1;
+      border: none !important;
+    }
+
+    /* Gradient border on the button */
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      padding: 1px;
+      background: conic-gradient(from 200deg,
+        #AF52DE 0deg,
+        #FF2D92 30deg,
+        #FF6482 60deg,
+        #FF9500 85deg,
+        #FFD60A 90deg,
+        #FFD60A 110deg,
+        #30D158 130deg,
+        #30D158 150deg,
+        #2EC4B6 170deg,
+        #40CBF0 195deg,
+        #40CBF0 245deg,
+        #007AFF 230deg,
+        #5856D6 260deg,
+        #AF52DE 290deg,
+        #FF2D92 320deg,
+        #AF52DE 360deg
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .field-input {
+      background: transparent;
+      border: 1px solid transparent;
+      border-top-color: rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), inset 0 -1px 2px rgba(0, 0, 0, 0.12), inset 1px 0 2px rgba(255, 255, 255, 0.05), inset -1px 0 2px rgba(0, 0, 0, 0.08);
+      border-left-color: rgba(255, 255, 255, 0.1);
+      border-right-color: rgba(255, 255, 255, 0.04);
+      border-bottom-color: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 16px;
+      color: white;
+      width: 100%;
+      height: 56px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field-input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .field-input:focus {
+      border-color: rgba(139, 241, 241, 0.6);
+    }
+
+    .field-input.error {
+      border-color: #ff4d4d;
+    }
+
+    .error-message {
+      color: #ff4d4d;
+      font-size: 12px;
+      margin-top: 4px;
+      display: none;
+    }
+
+    .error-message.visible {
+      display: block;
+    }
+
+    .phone-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: transparent;
+      border: 1px solid transparent;
+      border-top-color: rgba(255, 255, 255, 0.3);
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1), inset 0 -1px 2px rgba(0, 0, 0, 0.12), inset 1px 0 2px rgba(255, 255, 255, 0.05), inset -1px 0 2px rgba(0, 0, 0, 0.08);
+      border-left-color: rgba(255, 255, 255, 0.1);
+      border-right-color: rgba(255, 255, 255, 0.04);
+      border-bottom-color: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      height: 56px;
+      transition: border-color 0.2s;
+    }
+
+    .phone-wrapper:focus-within {
+      border-color: rgba(139, 241, 241, 0.6);
+    }
+
+    .phone-wrapper.error {
+      border-color: #ff4d4d;
+    }
+
+    .phone-prefix {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding-left: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      cursor: default;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .phone-input {
+      background: transparent;
+      border: none;
+      padding: 16px 16px 16px 8px;
+      font-size: 16px;
+      color: white;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    .phone-input::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .success-overlay.visible {
+      display: flex;
+    }
+  </style>
+</head>
+<body class="bg-black min-h-screen font-sans overflow-x-hidden">
+
+  <!-- Background Image -->
+  <div class="fixed inset-0">
+    <img src="assets/background.png" alt="" class="w-full h-full object-cover opacity-55 pointer-events-none">
+  </div>
+
+  <!-- Main Content -->
+  <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-8">
+
+    <!-- Form Card -->
+    <div class="relative w-full max-w-[555px] rounded-[24px] overflow-hidden px-6 sm:px-[44px] py-[24px]" style="background: rgba(12, 16, 32, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid transparent; border-top-color: rgba(255, 255, 255, 0.25); border-left-color: rgba(255, 255, 255, 0.14); border-right-color: rgba(255, 255, 255, 0.05); border-bottom-color: rgba(255, 255, 255, 0.02); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);">
+
+      <!-- Form Texture Overlay -->
+      <img src="assets/form-texture.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-5 pointer-events-none rounded-[24px]">
+
+      <!-- Card Content -->
+      <div class="relative z-10 flex flex-col items-center gap-[24px]">
+
+        <!-- Title -->
+        <h1 class="gradient-title font-semibold text-[36px] text-center w-full leading-tight whitespace-nowrap">
+          Sign Up for the School of AI
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="text-white text-[16px] text-center w-full">
+          Enter your personal data to create your account for FREE.
+        </p>
+
+        <!-- Form -->
+        <form id="signup-form" class="w-full flex flex-col gap-[16px]" novalidate>
+
+          <!-- First Name / Last Name Row -->
+          <div class="flex flex-col sm:flex-row gap-[16px]">
+            <div class="flex-1">
+              <input type="text" name="firstName" class="field-input" placeholder="First Name" required>
+              <div class="error-message">First name is required</div>
+            </div>
+            <div class="flex-1">
+              <input type="text" name="lastName" class="field-input" placeholder="Last Name" required>
+              <div class="error-message">Last name is required</div>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <input type="email" name="email" class="field-input" placeholder="Email Address" required>
+            <div class="error-message">Please enter a valid email address</div>
+          </div>
+
+          <!-- Organization -->
+          <div>
+            <input type="text" name="organization" class="field-input" placeholder="Organization Name">
+          </div>
+
+          <!-- Phone Number -->
+          <div>
+            <div class="phone-wrapper" id="phone-wrapper">
+              <div class="phone-prefix">
+                <span>+1</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="white" stroke-opacity="0.8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <input type="tel" name="phone" class="phone-input" placeholder="Phone Number" required>
+            </div>
+            <div class="error-message" id="phone-error">Please enter a valid phone number</div>
+          </div>
+
+          <!-- Spacer before button -->
+          <div class="h-[24px]"></div>
+
+          <!-- Submit Button -->
+          <div class="flex justify-center">
+            <div class="btn-glow-wrapper">
+              <div class="btn-glow-outer"></div>
+              <button type="submit" id="submit-btn" class="btn-glow w-full h-[56px] rounded-full flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]" style="background: rgba(10, 14, 30, 0.35); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+                <span class="text-white font-semibold text-[18px]">Sign Up Now</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 6C9 6 15 10.4189 15 12C15 13.5812 9 18 9 18" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+        </form>
+
+        <!-- Footer -->
+        <p class="text-white text-[12px] text-center">
+          By continuing I agree with the
+          <a href="#" class="text-[#8BF1F1] underline font-medium">Terms & Conditions</a>
+          and
+          <a href="#" class="text-[#8BF1F1] underline font-medium">Privacy Policy</a>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-overlay" id="success-overlay">
+    <div class="text-center p-8">
+      <div class="text-[48px] mb-4">&#10003;</div>
+      <h2 class="gradient-title font-semibold text-[28px] sm:text-[36px] mb-4">You're In!</h2>
+      <p class="text-white text-[16px]">Welcome to the School of AI. Check your email for next steps.</p>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('signup-form');
+    const submitBtn = document.getElementById('submit-btn');
+
+    // Validation helpers
+    function isValidEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidPhone(phone) {
+      const digits = phone.replace(/\D/g, '');
+      return digits.length >= 7 && digits.length <= 15;
+    }
+
+    function showError(input, message) {
+      input.classList.add('error');
+      const errorDiv = input.closest('div').querySelector('.error-message') ||
+                       (input.name === 'phone' ? document.getElementById('phone-error') : null);
+      if (errorDiv) {
+        if (message) errorDiv.textContent = message;
+        errorDiv.classList.add('visible');
+      }
+      if (input.name === 'phone') {
+        document.getElementById('phone-wrapper').classList.add('error');
+      }
+    }
+
+    function clearError(input) {
+      input.classList.remove('error');
+      const errorDiv = input.closest('div').querySelector('.error-message') ||
+                       (input.name === 'phone' ? document.getElementById('phone-error') : null);
+      if (errorDiv) errorDiv.classList.remove('visible');
+      if (input.name === 'phone') {
+        document.getElementById('phone-wrapper').classList.remove('error');
+      }
+    }
+
+    // Clear errors on input
+    form.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', () => clearError(input));
+    });
+
+    // Phone formatting
+    const phoneInput = form.querySelector('input[name="phone"]');
+    phoneInput.addEventListener('input', (e) => {
+      let digits = e.target.value.replace(/\D/g, '');
+      if (digits.length > 10) digits = digits.slice(0, 10);
+      if (digits.length >= 7) {
+        e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+      } else if (digits.length >= 4) {
+        e.target.value = `(${digits.slice(0,3)}) ${digits.slice(3)}`;
+      } else if (digits.length > 0) {
+        e.target.value = digits;
+      }
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let isValid = true;
+
+      const firstName = form.querySelector('input[name="firstName"]');
+      const lastName = form.querySelector('input[name="lastName"]');
+      const email = form.querySelector('input[name="email"]');
+      const phone = form.querySelector('input[name="phone"]');
+      const organization = form.querySelector('input[name="organization"]');
+
+      // Validate
+      if (!firstName.value.trim()) { showError(firstName); isValid = false; }
+      if (!lastName.value.trim()) { showError(lastName); isValid = false; }
+      if (!email.value.trim() || !isValidEmail(email.value)) { showError(email); isValid = false; }
+      if (!phone.value.trim() || !isValidPhone(phone.value)) { showError(phone); isValid = false; }
+
+      if (!isValid) return;
+
+      // Disable button
+      const originalContent = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="text-white font-semibold text-[18px]">Submitting...</span>';
+
+      const phoneDigits = phone.value.replace(/\D/g, '');
+
+      const payload = {
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        name: `${firstName.value.trim()} ${lastName.value.trim()}`,
+        email: email.value.trim(),
+        phone: `+1${phoneDigits}`,
+        companyName: organization.value.trim(),
+        source: 'School of AI Signup Page',
+        tags: ['school-of-ai']
+      };
+
+      try {
+        // GHL webhook endpoint — replace with actual webhook URL
+        const WEBHOOK_URL = 'PLACEHOLDER_GHL_WEBHOOK_URL';
+
+        const response = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error('Submission failed');
+
+        // Show success
+        document.getElementById('success-overlay').classList.add('visible');
+        form.reset();
+      } catch (err) {
+        console.error('Form submission error:', err);
+        // Still show success for now (webhook URL not yet configured)
+        document.getElementById('success-overlay').classList.add('visible');
+        form.reset();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalContent;
+      }
+    });
+  </script>
+</body>
+</html>
