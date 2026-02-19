@@ -440,8 +440,8 @@
       };
 
       try {
-        // GHL webhook endpoint — replace with actual webhook URL
-        const WEBHOOK_URL = 'PLACEHOLDER_GHL_WEBHOOK_URL';
+        // GHL contact upsert via Supabase Edge Function proxy
+        const WEBHOOK_URL = 'https://pgvpokmguzsnzagksavu.supabase.co/functions/v1/school-of-ai-signup';
 
         const response = await fetch(WEBHOOK_URL, {
           method: 'POST',
