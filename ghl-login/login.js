@@ -8,21 +8,23 @@
   var startTime = Date.now();
 
   var poll = setInterval(function () {
-    var loginContainer = document.querySelector('.hl_login');
-    var header = document.querySelector('.hl_login--header');
     var body = document.querySelector('.hl_login--body');
 
-    if (loginContainer && header && body) {
+    if (body) {
       clearInterval(poll);
-      injectBranding(loginContainer, header, body);
+      injectBranding(body);
     } else if (Date.now() - startTime > maxWait) {
       clearInterval(poll);
     }
   }, 200);
 
-  function injectBranding(container, header, body) {
+  function injectBranding(body) {
+    // Prevent double-injection
+    if (document.getElementById('ew-brand-text')) return;
+
     // --- "ENDLESS WINNING" rainbow glow text ---
     var brandText = document.createElement('div');
+    brandText.id = 'ew-brand-text';
     brandText.textContent = 'ENDLESS WINNING';
     brandText.style.cssText = [
       'text-align: center',
@@ -32,7 +34,6 @@
       'letter-spacing: 5px',
       'color: #ffffff',
       'text-transform: uppercase',
-      'margin-top: 16px',
       'margin-bottom: 4px',
       'text-shadow: ' +
         '-5px -3px 14px #AF52DE, ' +
@@ -48,6 +49,7 @@
 
     // --- Tagline ---
     var tagline = document.createElement('div');
+    tagline.id = 'ew-tagline';
     tagline.textContent = 'Your command center awaits';
     tagline.style.cssText = [
       'text-align: center',
@@ -59,12 +61,18 @@
       'letter-spacing: 0.5px'
     ].join('; ');
 
-    // Insert between header and body
-    header.parentNode.insertBefore(brandText, body);
-    header.parentNode.insertBefore(tagline, body);
+    // --- Wrapper to hold brand text + tagline above the card ---
+    var brandWrapper = document.createElement('div');
+    brandWrapper.style.cssText = 'text-align: center; margin-bottom: 8px;';
+    brandWrapper.appendChild(brandText);
+    brandWrapper.appendChild(tagline);
+
+    // Insert before the first child of .hl_login--body
+    body.insertBefore(brandWrapper, body.firstChild);
 
     // --- Footer ---
     var footer = document.createElement('div');
+    footer.id = 'ew-footer';
     footer.style.cssText = [
       'text-align: center',
       'font-family: Gilroy, system-ui, sans-serif',
@@ -83,7 +91,7 @@
     footerLine2.rel = 'noopener';
     footerLine2.textContent = 'endlesswinning.com';
     footerLine2.style.cssText = [
-      'color: rgba(255, 255, 255, 0.25)',
+      'color: rgba(255, 255, 255, 0.25) !important',
       'text-decoration: none',
       'font-size: 11px',
       'display: inline-block',
@@ -93,7 +101,16 @@
     footer.appendChild(footerLine1);
     footer.appendChild(footerLine2);
 
-    // Append footer after the body/card section
-    body.parentNode.insertBefore(footer, body.nextSibling);
+    // Append footer at the end of .hl_login--body
+    body.appendChild(footer);
+
+    // --- Style the "Or Continue with" divider text ---
+    var allSpans = body.querySelectorAll('span');
+    for (var i = 0; i < allSpans.length; i++) {
+      var text = allSpans[i].textContent.trim().toLowerCase();
+      if (text.indexOf('continue with') !== -1 || text.indexOf('or ') === 0) {
+        allSpans[i].style.cssText = 'color: rgba(255,255,255,0.4) !important; background: #000 !important; font-family: Gilroy, system-ui, sans-serif; font-size: 13px;';
+      }
+    }
   }
 })();

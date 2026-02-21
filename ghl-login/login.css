@@ -20,21 +20,10 @@
   font-display: swap;
 }
 
-/* --- Page Background --- */
-.hl_login {
-  background: #000000 !important;
-  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* --- Logo --- */
+/* --- Top Header Bar (logo + language picker) --- */
 .hl_login--header {
-  text-align: center;
-  margin-bottom: 0 !important;
+  background: #000000 !important;
+  border-bottom: 1px solid rgba(139, 241, 241, 0.06) !important;
 }
 
 .hl_login--header img {
@@ -42,16 +31,46 @@
   height: auto !important;
 }
 
-/* --- Hide default heading (replaced by JS) --- */
-.hl_login--body .heading2,
-.hl_login--header h1,
-.hl_login--header h2 {
+/* Language dropdown */
+.hl_login--header select,
+.hl_login--header .form-select,
+.hl_login--header [class*="language"] select {
+  background: #050810 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 8px !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* --- Page Background --- */
+.hl_login,
+.hl_login--body,
+body {
+  background: #000000 !important;
+  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
+}
+
+.hl_login--body {
+  min-height: calc(100vh - 70px);
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 40px 20px !important;
+}
+
+/* --- Hide default heading "Sign into your account" (replaced by JS) --- */
+.hl_login--body h1,
+.hl_login--body h2,
+.hl_login--body .heading2 {
   display: none !important;
 }
 
 /* --- Glass Card --- */
 .hl_login--body .card,
-.hl_login--body .hl-card {
+.hl_login--body .hl-card,
+.hl_login--body > div > div {
   background: rgba(12, 16, 32, 0.35) !important;
   -webkit-backdrop-filter: blur(24px) !important;
   backdrop-filter: blur(24px) !important;
@@ -80,7 +99,8 @@
 .hl_login--body input.hl-text-input,
 .hl_login--body input[type="email"],
 .hl_login--body input[type="password"],
-.hl_login--body input[type="text"] {
+.hl_login--body input[type="text"],
+.hl_login--body input {
   background: #050810 !important;
   border: 1px solid rgba(139, 241, 241, 0.12) !important;
   border-radius: 12px !important;
@@ -92,10 +112,7 @@
 }
 
 .hl_login .form-control:focus,
-.hl_login--body input.hl-text-input:focus,
-.hl_login--body input[type="email"]:focus,
-.hl_login--body input[type="password"]:focus,
-.hl_login--body input[type="text"]:focus {
+.hl_login--body input:focus {
   border-color: #8BF1F1 !important;
   box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.15) !important;
   outline: none !important;
@@ -104,6 +121,14 @@
 .hl_login .form-control::placeholder,
 .hl_login--body input::placeholder {
   color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* --- Input icons (password eye, etc.) --- */
+.hl_login--body svg,
+.hl_login--body .input-group-text,
+.hl_login--body [class*="icon"] {
+  color: rgba(255, 255, 255, 0.4) !important;
+  fill: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* --- Sign In Button (Rainbow Glow) --- */
@@ -169,7 +194,47 @@
   transform: translateY(0) !important;
 }
 
-/* --- Links --- */
+/* --- "Or Continue with" Divider --- */
+.hl_login--body hr,
+.hl_login--body .divider,
+.hl_login--body [class*="separator"],
+.hl_login--body [class*="divider"] {
+  border-color: rgba(139, 241, 241, 0.1) !important;
+  opacity: 1 !important;
+}
+
+.hl_login--body .divider span,
+.hl_login--body [class*="separator"] span,
+.hl_login--body [class*="divider"] span {
+  color: rgba(255, 255, 255, 0.4) !important;
+  background: transparent !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 13px !important;
+}
+
+/* --- Google Sign-In Button --- */
+.hl_login--body [class*="google"],
+.hl_login--body .btn-outline,
+.hl_login--body button:not([type="submit"]):not(.btn-blue):not(.btn-primary) {
+  background: #050810 !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 12px !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  padding: 12px 24px !important;
+  transition: border-color 0.2s ease, background 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.hl_login--body [class*="google"]:hover,
+.hl_login--body .btn-outline:hover,
+.hl_login--body button:not([type="submit"]):not(.btn-blue):not(.btn-primary):hover {
+  background: #0a0e1e !important;
+  border-color: rgba(139, 241, 241, 0.25) !important;
+}
+
+/* --- Links (Forgot password, Terms) --- */
 .hl_login a,
 .hl_login--body a {
   color: #8BF1F1 !important;
@@ -189,6 +254,16 @@
 .hl_login span,
 .hl_login div {
   font-family: 'Gilroy', system-ui, sans-serif !important;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* --- "By signing in you agree to our Terms" text --- */
+.hl_login--body p,
+.hl_login--body [class*="terms"],
+.hl_login--body [class*="footer"] p {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 12px !important;
+  text-align: center !important;
 }
 
 /* --- Checkbox / Remember Me --- */
@@ -204,16 +279,24 @@
   margin-bottom: 20px !important;
 }
 
-/* --- Remove any default white backgrounds --- */
-.hl_login--body,
+/* --- Remove any default white/light backgrounds --- */
 .hl_login--footer {
   background: transparent !important;
+}
+
+/* --- Platform Language label --- */
+.hl_login--header span,
+.hl_login--header label,
+.hl_login--header p {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
 }
 
 /* --- Responsive --- */
 @media (max-width: 480px) {
   .hl_login--body .card,
-  .hl_login--body .hl-card {
+  .hl_login--body .hl-card,
+  .hl_login--body > div > div {
     padding: 32px 24px !important;
     border-radius: 20px !important;
     margin: 0 16px !important;
