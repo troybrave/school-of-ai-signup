@@ -3,6 +3,52 @@
    Paste into: Settings > Company > Custom CSS
    ============================================ */
 
+/* --- Registered Custom Properties (for animatable gradients) --- */
+@property --ew-border-angle {
+  syntax: '<angle>';
+  initial-value: 180deg;
+  inherits: false;
+}
+
+@property --ew-card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+:root {
+  /* Brand Colors */
+  --ew-black: #000000;
+  --ew-dark-base: #050810;
+  --ew-dark-surface: #0a0e1e;
+  --ew-cyan: #8BF1F1;
+  --ew-green: #5FFCC0;
+  --ew-white: #ffffff;
+  --ew-white-85: rgba(255, 255, 255, 0.85);
+  --ew-white-70: rgba(255, 255, 255, 0.7);
+  --ew-white-60: rgba(255, 255, 255, 0.6);
+  --ew-white-40: rgba(255, 255, 255, 0.4);
+  --ew-white-25: rgba(255, 255, 255, 0.25);
+  --ew-card-border-top: rgba(139, 241, 241, 0.15);
+  --ew-card-border-side: rgba(139, 241, 241, 0.10);
+  --ew-card-border-bottom: rgba(139, 241, 241, 0.05);
+  --ew-input-border: rgba(139, 241, 241, 0.12);
+  --ew-focus-ring: rgba(139, 241, 241, 0.15);
+  --ew-divider: rgba(139, 241, 241, 0.1);
+
+  /* Rainbow Bloom */
+  --ew-bloom:
+    0 0 14px rgba(175, 82, 222, 0.44),
+    0 0 14px rgba(255, 45, 146, 0.25),
+    0 0 14px rgba(48, 209, 88, 0.2),
+    0 0 14px rgba(64, 203, 240, 0.25);
+  --ew-bloom-hover:
+    0 0 20px rgba(175, 82, 222, 0.56),
+    0 0 20px rgba(255, 45, 146, 0.35),
+    0 0 20px rgba(48, 209, 88, 0.3),
+    0 0 20px rgba(64, 203, 240, 0.35);
+}
+
 /* --- Font Loading --- */
 @font-face {
   font-family: 'Gilroy';
@@ -20,153 +66,383 @@
   font-display: swap;
 }
 
-/* --- Top Header Bar (logo + language picker) --- */
-.hl_login--header {
-  background: #000000 !important;
-  border-bottom: 1px solid rgba(139, 241, 241, 0.06) !important;
-}
-
-.hl_login--header img {
-  max-width: 80px !important;
-  height: auto !important;
-}
-
-/* Language dropdown */
-.hl_login--header select,
-.hl_login--header .form-select,
-.hl_login--header [class*="language"] select {
-  background: #050810 !important;
-  color: rgba(255, 255, 255, 0.7) !important;
-  border: 1px solid rgba(139, 241, 241, 0.12) !important;
-  border-radius: 8px !important;
-  font-family: 'Gilroy', system-ui, sans-serif !important;
-  font-size: 13px !important;
+/* ==========================================
+   AMBIENT BACKGROUND GLOW
+   Two blurred orbs drifting slowly in
+   opposite directions behind the card.
+   ========================================== */
+@keyframes ewAmbientDrift {
+  0%   { transform: translate(-30%, -30%) scale(1); }
+  33%  { transform: translate(20%, -20%) scale(1.1); }
+  66%  { transform: translate(-10%, 20%) scale(0.95); }
+  100% { transform: translate(-30%, -30%) scale(1); }
 }
 
 /* --- Page Background --- */
-.hl_login,
-.hl_login--body,
-body {
-  background: #000000 !important;
-  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
-}
-
-.hl_login--body {
-  min-height: calc(100vh - 70px);
+.hl_login {
+  background: var(--ew-black) !important;
+  background-image: none !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
   justify-content: center !important;
-  padding: 40px 20px !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  height: 100vh;
+  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
-/* --- Hide default heading "Sign into your account" (replaced by JS) --- */
-.hl_login--body h1,
-.hl_login--body h2,
-.hl_login--body .heading2 {
+/* Ambient glow orb 1: cyan-purple */
+.hl_login::before {
+  content: '' !important;
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 600px !important;
+  height: 600px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(
+    circle,
+    rgba(64, 203, 240, 0.06) 0%,
+    rgba(175, 82, 222, 0.04) 40%,
+    transparent 70%
+  ) !important;
+  filter: blur(80px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  animation: ewAmbientDrift 25s ease-in-out infinite !important;
+  will-change: transform !important;
+}
+
+/* Ambient glow orb 2: pink-green (counter-drift) */
+.hl_login::after {
+  content: '' !important;
+  position: fixed !important;
+  top: 40% !important;
+  left: 60% !important;
+  width: 500px !important;
+  height: 500px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(
+    circle,
+    rgba(255, 45, 146, 0.04) 0%,
+    rgba(48, 209, 88, 0.03) 40%,
+    transparent 70%
+  ) !important;
+  filter: blur(80px) !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  animation: ewAmbientDrift 30s ease-in-out infinite reverse !important;
+  will-change: transform !important;
+}
+
+/* --- Hide default header bar (logo + language) --- */
+.hl_login--header {
   display: none !important;
 }
 
-/* --- Glass Card --- */
-.hl_login--body .card,
-.hl_login--body .hl-card,
-.hl_login--body > div > div {
-  background: rgba(12, 16, 32, 0.35) !important;
-  -webkit-backdrop-filter: blur(24px) !important;
-  backdrop-filter: blur(24px) !important;
-  border-radius: 24px !important;
-  border: 1px solid rgba(139, 241, 241, 0.08) !important;
-  box-shadow: none !important;
-  padding: 40px 36px !important;
-  max-width: 420px !important;
-  width: 100% !important;
+/* ==========================================
+   ENTRY ANIMATION
+   Card: scale + translateY with expo-out curve
+   Children: staggered translateY cascade
+   ========================================== */
+@keyframes ewCardIn {
+  0% {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
 }
 
-/* --- Form Labels --- */
-.hl_login label,
-.hl_login .form-label,
+@keyframes ewElementIn {
+  0% {
+    transform: translateY(6px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* --- Login Box Body (Glass Card Container) --- */
+div.hl_login--body {
+  position: relative !important;
+  max-width: 440px !important;
+  width: 100% !important;
+  background:
+    linear-gradient(
+      168deg,
+      rgba(139, 241, 241, 0.03) 0%,
+      rgba(12, 16, 32, 0.45) 35%,
+      rgba(12, 16, 32, 0.50) 100%
+    ) !important;
+  border-radius: 24px !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  backdrop-filter: blur(24px) !important;
+  border: none !important;
+  box-shadow:
+    0 0 80px -20px rgba(139, 241, 241, 0.06),
+    0 8px 32px -8px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 0 rgba(0, 0, 0, 0.25) !important;
+  overflow: hidden !important;
+  z-index: 1 !important;
+
+  /* Entry animation */
+  animation: ewCardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+/* --- Slow rotating rainbow border on card --- */
+@keyframes ewCardBorderRotate {
+  0%   { --ew-card-angle: 0deg; }
+  100% { --ew-card-angle: 360deg; }
+}
+
+div.hl_login--body::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 24px !important;
+  padding: 1px !important;
+  background: conic-gradient(from var(--ew-card-angle),
+    rgba(175, 82, 222, 0.12) 0deg,
+    rgba(255, 45, 146, 0.08) 52deg,
+    rgba(255, 100, 130, 0.06) 82deg,
+    rgba(255, 149, 0, 0.08) 94deg,
+    rgba(255, 214, 10, 0.06) 124deg,
+    rgba(48, 209, 88, 0.08) 180deg,
+    rgba(46, 196, 182, 0.06) 236deg,
+    rgba(64, 203, 240, 0.12) 266deg,
+    rgba(0, 122, 255, 0.08) 278deg,
+    rgba(88, 86, 214, 0.08) 308deg,
+    rgba(175, 82, 222, 0.12) 360deg
+  ) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  animation: ewCardBorderRotate 20s linear infinite !important;
+}
+
+/* --- Glass specular highlight (top edge light catch) --- */
+div.hl_login--body::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 24px !important;
+  right: 24px !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 20%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.08) 80%,
+    transparent 100%
+  ) !important;
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* --- Staggered child entry animations --- */
+.hl_login--body .heading2,
+.hl_login--body #ew-brand-text,
+.hl_login--body #ew-tagline,
+.hl_login--body .form-group,
+.hl_login--body .btn.btn-blue,
+.hl_login--body button:not(.btn-blue),
+.hl_login--body .card-body p,
+.hl_login--body .card-body .flex {
+  opacity: 0;
+  animation: ewElementIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hl_login--body .heading2                 { animation-delay: 0.10s; }
+.hl_login--body #ew-brand-text            { animation-delay: 0.16s; }
+.hl_login--body #ew-tagline               { animation-delay: 0.22s; }
+.hl_login--body .form-group:nth-child(1)  { animation-delay: 0.28s; }
+.hl_login--body .form-group:nth-child(2)  { animation-delay: 0.34s; }
+.hl_login--body .form-group:nth-child(3)  { animation-delay: 0.40s; }
+.hl_login--body .btn.btn-blue             { animation-delay: 0.46s; }
+.hl_login--body .card-body .flex          { animation-delay: 0.52s; }
+.hl_login--body button:not(.btn-blue)     { animation-delay: 0.56s; }
+.hl_login--body .card-body p              { animation-delay: 0.60s; }
+
+/* --- Card interior --- */
+.hl_login--body .card {
+  background-color: transparent !important;
+}
+
+.hl_login--body .card .card-body {
+  padding: 44px 36px !important;
+  background-color: transparent !important;
+}
+
+/* --- Logo via ::before on heading --- */
+.hl_login--body .heading2::before {
+  content: "" !important;
+  background: var(--logo-image, url('https://school.endlesswinning.com/assets/ew-icon.png')) !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: contain !important;
+  height: 72px !important;
+  width: 72px !important;
+  margin: 0 auto 16px auto !important;
+  display: block !important;
+  border-radius: 16px !important;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* --- Heading text (replace "Sign into your account") --- */
+.hl_login--body .heading2 {
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0px !important;
+  text-align: center !important;
+  margin-bottom: 24px !important;
+  color: transparent !important;
+}
+
+/* ==========================================
+   FORM LABELS
+   Highlight on focus-within for parent group
+   ========================================== */
+.hl_login--body .card-body label,
 .hl_login--body label {
-  color: rgba(255, 255, 255, 0.85) !important;
+  color: var(--ew-white-85) !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 14px !important;
   font-weight: 600 !important;
   letter-spacing: 0.3px;
-  margin-bottom: 6px !important;
+  transition: color 0.2s ease !important;
 }
 
-/* --- Input Fields --- */
-.hl_login .form-control,
+/* Label brightens to cyan when its input is focused */
+.hl_login--body .form-group:focus-within label {
+  color: var(--ew-cyan) !important;
+}
+
+/* ==========================================
+   INPUT FIELDS
+   Focus: animated glow ring + subtle pulse
+   ========================================== */
 .hl_login--body input.hl-text-input,
-.hl_login--body input[type="email"],
-.hl_login--body input[type="password"],
-.hl_login--body input[type="text"],
-.hl_login--body input {
-  background: #050810 !important;
-  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+.hl_login .hl_login--body .form-control {
+  background: rgba(5, 8, 16, 0.65) !important;
+  color: var(--ew-white) !important;
+  border: 1px solid var(--ew-input-border) !important;
   border-radius: 12px !important;
-  color: #ffffff !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 15px !important;
   padding: 12px 16px !important;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
+  transition: border-color 0.2s ease,
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.hl_login .form-control:focus,
-.hl_login--body input:focus {
-  border-color: #8BF1F1 !important;
-  box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.15) !important;
+@keyframes ewFocusPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 3px var(--ew-focus-ring),
+      0 0 12px rgba(139, 241, 241, 0.06),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow:
+      0 0 0 3px var(--ew-focus-ring),
+      0 0 18px rgba(139, 241, 241, 0.10),
+      inset 0 2px 4px rgba(0, 0, 0, 0.3),
+      inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.hl_login--body input.hl-text-input:focus,
+.hl_login .hl_login--body .form-control:focus {
+  border-color: var(--ew-cyan) !important;
+  box-shadow:
+    0 0 0 3px var(--ew-focus-ring),
+    0 0 12px rgba(139, 241, 241, 0.06),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
   outline: none !important;
+  animation: ewFocusPulse 3s ease-in-out infinite !important;
 }
 
-.hl_login .form-control::placeholder,
 .hl_login--body input::placeholder {
   color: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* --- Input icons (password eye, etc.) --- */
-.hl_login--body svg,
-.hl_login--body .input-group-text,
-.hl_login--body [class*="icon"] {
-  color: rgba(255, 255, 255, 0.4) !important;
-  fill: rgba(255, 255, 255, 0.4) !important;
+/* ==========================================
+   PASSWORD EYE ICON
+   Hover: cyan highlight. Active: press scale.
+   ========================================== */
+.hl_login--body svg {
+  color: var(--ew-white-40) !important;
+  transition: color 0.2s ease, transform 0.15s ease !important;
+  cursor: pointer;
 }
 
-/* --- Sign In Button (Rainbow Glow) --- */
+.hl_login--body .form-group svg:hover {
+  color: var(--ew-cyan) !important;
+}
+
+.hl_login--body .form-group svg:active {
+  transform: scale(0.88) !important;
+}
+
+/* ==========================================
+   SIGN IN BUTTON (Rainbow Glow)
+   Hover: border rotation + lift + bloom
+   Active: tactile press depression
+   ========================================== */
+@keyframes ewBorderRotate {
+  0%   { --ew-border-angle: 180deg; }
+  100% { --ew-border-angle: 540deg; }
+}
+
 .hl_login .btn.btn-blue,
-.hl_login--body button[type="submit"],
-.hl_login--body .btn-primary {
+.hl_login .btn.btn-blue:focus {
   position: relative !important;
   background: rgba(10, 14, 30, 0.35) !important;
+  background-color: rgba(10, 14, 30, 0.35) !important;
   -webkit-backdrop-filter: blur(4px) !important;
   backdrop-filter: blur(4px) !important;
   border: none !important;
+  border-color: transparent !important;
   border-radius: 9999px !important;
-  color: #ffffff !important;
+  color: var(--ew-white) !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 17px !important;
   font-weight: 700 !important;
-  padding: 14px 32px !important;
+  min-height: 52px !important;
   width: 100% !important;
   cursor: pointer !important;
   overflow: visible !important;
   z-index: 1 !important;
-  transition: transform 0.2s ease, box-shadow 0.3s ease !important;
-  box-shadow:
-    0 0 14px rgba(175, 82, 222, 0.44),
-    0 0 14px rgba(255, 45, 146, 0.25),
-    0 0 14px rgba(48, 209, 88, 0.2),
-    0 0 14px rgba(64, 203, 240, 0.25) !important;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s ease !important;
+  box-shadow: var(--ew-bloom) !important;
+  will-change: transform;
 }
 
-.hl_login .btn.btn-blue::before,
-.hl_login--body button[type="submit"]::before,
-.hl_login--body .btn-primary::before {
+.hl_login .btn.btn-blue::before {
   content: '' !important;
   position: absolute !important;
   inset: 0 !important;
   border-radius: 9999px !important;
   padding: 1.5px !important;
-  background: conic-gradient(from 180deg,
+  background: conic-gradient(from var(--ew-border-angle),
     #AF52DE 0deg, #FF2D92 52deg, #FF6482 82deg, #FF9500 94deg,
     #FFD60A 124deg, #30D158 180deg, #2EC4B6 236deg, #40CBF0 266deg,
     #007AFF 278deg, #5856D6 308deg, #AF52DE 360deg
@@ -177,139 +453,230 @@ body {
   pointer-events: none !important;
 }
 
-.hl_login .btn.btn-blue:hover,
-.hl_login--body button[type="submit"]:hover,
-.hl_login--body .btn-primary:hover {
+/* Hover: lift + intensify bloom + rotate border */
+.hl_login .btn.btn-blue:hover {
+  background-color: rgba(10, 14, 30, 0.35) !important;
+  border-color: transparent !important;
   transform: translateY(-1px) !important;
-  box-shadow:
-    0 0 20px rgba(175, 82, 222, 0.56),
-    0 0 20px rgba(255, 45, 146, 0.35),
-    0 0 20px rgba(48, 209, 88, 0.3),
-    0 0 20px rgba(64, 203, 240, 0.35) !important;
+  box-shadow: var(--ew-bloom-hover) !important;
 }
 
-.hl_login .btn.btn-blue:active,
-.hl_login--body button[type="submit"]:active,
-.hl_login--body .btn-primary:active {
-  transform: translateY(0) !important;
+.hl_login .btn.btn-blue:hover::before {
+  animation: ewBorderRotate 4s linear infinite !important;
+}
+
+/* Active: tactile press */
+.hl_login .btn.btn-blue:active {
+  transform: translateY(0px) scale(0.98) !important;
+  box-shadow: var(--ew-bloom) !important;
+  transition-duration: 0.08s !important;
+}
+
+/* ==========================================
+   BUTTON LOADING STATE
+   Spinner replaces text, pointer-events off
+   ========================================== */
+@keyframes ewSpinner {
+  to { transform: rotate(360deg); }
+}
+
+.hl_login .btn.btn-blue.ew-loading {
+  pointer-events: none !important;
+  opacity: 0.85 !important;
+}
+
+.hl_login .btn.btn-blue.ew-loading .ew-btn-text {
+  opacity: 0 !important;
+  transition: opacity 0.15s ease !important;
+}
+
+.hl_login .btn.btn-blue.ew-loading::after {
+  content: '' !important;
+  position: absolute !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-top-color: var(--ew-white) !important;
+  border-radius: 50% !important;
+  animation: ewSpinner 0.6s linear infinite !important;
+  top: 50% !important;
+  left: 50% !important;
+  margin: -10px 0 0 -10px !important;
+}
+
+/* ==========================================
+   GOOGLE SIGN-IN BUTTON
+   Hover: lift + shadow. Active: press.
+   ========================================== */
+.hl_login button:not(.btn-blue) {
+  background-color: rgba(5, 8, 16, 0.5) !important;
+  color: var(--ew-white-85) !important;
+  border: 1px solid var(--ew-input-border) !important;
+  border-radius: 12px !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  min-height: 48px !important;
+  transition: border-color 0.2s ease,
+              background 0.2s ease,
+              transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s ease !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+}
+
+.hl_login button:not(.btn-blue):hover {
+  background-color: var(--ew-dark-surface) !important;
+  border-color: rgba(139, 241, 241, 0.25) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.hl_login button:not(.btn-blue):active {
+  transform: translateY(0) scale(0.98) !important;
+  box-shadow: none !important;
+  transition-duration: 0.08s !important;
 }
 
 /* --- "Or Continue with" Divider --- */
-.hl_login--body hr,
-.hl_login--body .divider,
-.hl_login--body [class*="separator"],
-.hl_login--body [class*="divider"] {
-  border-color: rgba(139, 241, 241, 0.1) !important;
-  opacity: 1 !important;
-}
-
-.hl_login--body .divider span,
-.hl_login--body [class*="separator"] span,
-.hl_login--body [class*="divider"] span {
-  color: rgba(255, 255, 255, 0.4) !important;
-  background: transparent !important;
+.hl_login--body .card-body .flex span {
+  color: var(--ew-white-40) !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 13px !important;
+  background: transparent !important;
+  padding: 0 12px !important;
 }
 
-/* --- Google Sign-In Button --- */
-.hl_login--body [class*="google"],
-.hl_login--body .btn-outline,
-.hl_login--body button:not([type="submit"]):not(.btn-blue):not(.btn-primary) {
-  background: #050810 !important;
-  border: 1px solid rgba(139, 241, 241, 0.12) !important;
-  border-radius: 12px !important;
-  color: rgba(255, 255, 255, 0.85) !important;
-  font-family: 'Gilroy', system-ui, sans-serif !important;
-  font-size: 15px !important;
-  padding: 12px 24px !important;
-  transition: border-color 0.2s ease, background 0.2s ease !important;
-  box-shadow: none !important;
+.hl_login--body hr {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(139, 241, 241, 0.1),
+    transparent
+  ) !important;
 }
 
-.hl_login--body [class*="google"]:hover,
-.hl_login--body .btn-outline:hover,
-.hl_login--body button:not([type="submit"]):not(.btn-blue):not(.btn-primary):hover {
-  background: #0a0e1e !important;
-  border-color: rgba(139, 241, 241, 0.25) !important;
-}
-
-/* --- Links (Forgot password, Terms) --- */
+/* ==========================================
+   LINKS
+   Animated underline grows left-to-right
+   ========================================== */
 .hl_login a,
-.hl_login--body a {
-  color: #8BF1F1 !important;
+.hl_login--body a,
+#forgot_passowrd_btn,
+.hl_login--body .card-body .font-semibold.cursor-pointer.text-curious-blue-500 {
+  color: var(--ew-cyan) !important;
   text-decoration: none !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
-  transition: opacity 0.2s ease !important;
+  background-image: linear-gradient(var(--ew-cyan), var(--ew-cyan)) !important;
+  background-size: 0% 1px !important;
+  background-position: left bottom !important;
+  background-repeat: no-repeat !important;
+  transition: background-size 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.2s ease !important;
 }
 
 .hl_login a:hover,
 .hl_login--body a:hover {
-  opacity: 0.8 !important;
-  text-decoration: underline !important;
+  opacity: 1 !important;
+  background-size: 100% 1px !important;
+  text-decoration: none !important;
+}
+
+/* --- Heading h2 inside login-card-heading --- */
+.hl_login--body .card-body .login-card-heading h2 {
+  color: var(--ew-white) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
 }
 
 /* --- General Text --- */
-.hl_login p,
-.hl_login span,
-.hl_login div {
+.hl_login--body .card .card-body p {
+  color: var(--ew-white-40) !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* --- "By signing in you agree to our Terms" text --- */
-.hl_login--body p,
-.hl_login--body [class*="terms"],
-.hl_login--body [class*="footer"] p {
-  color: rgba(255, 255, 255, 0.4) !important;
   font-size: 12px !important;
-  text-align: center !important;
 }
 
-/* --- Checkbox / Remember Me --- */
-.hl_login .form-check-label,
-.hl_login--body .form-check-label {
-  color: rgba(255, 255, 255, 0.6) !important;
-  font-size: 13px !important;
+/* --- Submit button focus outline state --- */
+.hl_login--body .card-body div .focus\:outline-none {
+  border-style: none !important;
+  border-radius: 9999px !important;
 }
 
-/* --- Form Groups Spacing --- */
-.hl_login .form-group,
-.hl_login--body .form-group {
-  margin-bottom: 20px !important;
-}
-
-/* --- Remove any default white/light backgrounds --- */
-.hl_login--footer {
-  background: transparent !important;
-}
-
-/* --- Platform Language label --- */
-.hl_login--header span,
-.hl_login--header label,
-.hl_login--header p {
-  color: rgba(255, 255, 255, 0.5) !important;
-  font-family: 'Gilroy', system-ui, sans-serif !important;
-}
-
-/* --- Responsive --- */
-@media (max-width: 480px) {
-  .hl_login--body .card,
-  .hl_login--body .hl-card,
-  .hl_login--body > div > div {
-    padding: 32px 24px !important;
-    border-radius: 20px !important;
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media only screen and (max-width: 1000px) {
+  div.hl_login--body {
     margin: 0 16px !important;
   }
+}
 
-  .hl_login--header img {
-    max-width: 64px !important;
+@media (max-width: 480px) {
+  .hl_login--body .card .card-body {
+    padding: 32px 24px !important;
   }
 
-  .hl_login .btn.btn-blue,
-  .hl_login--body button[type="submit"],
-  .hl_login--body .btn-primary {
-    font-size: 16px !important;
-    padding: 13px 28px !important;
+  .hl_login--body .heading2::before {
+    height: 56px !important;
+    width: 56px !important;
+  }
+
+  /* Reduce ambient orbs on mobile for performance */
+  .hl_login::before,
+  .hl_login::after {
+    width: 300px !important;
+    height: 300px !important;
+  }
+}
+
+/* ==========================================
+   ACCESSIBILITY: prefers-reduced-motion
+   Kill all animation + transition durations.
+   Elements appear instantly, fully visible.
+   ========================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  div.hl_login--body {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  div.hl_login--body::before {
+    animation: none !important;
+  }
+
+  .hl_login .btn.btn-blue:hover::before {
+    animation: none !important;
+  }
+
+  .hl_login--body input.hl-text-input:focus,
+  .hl_login .hl_login--body .form-control:focus {
+    animation: none !important;
+  }
+
+  /* Staggered children appear immediately */
+  .hl_login--body .heading2,
+  .hl_login--body #ew-brand-text,
+  .hl_login--body #ew-tagline,
+  .hl_login--body .form-group,
+  .hl_login--body .btn.btn-blue,
+  .hl_login--body button:not(.btn-blue),
+  .hl_login--body .card-body p,
+  .hl_login--body .card-body .flex {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  /* Ambient glow orbs: static, no drift */
+  .hl_login::before,
+  .hl_login::after {
+    animation: none !important;
   }
 }

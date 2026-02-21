@@ -1,0 +1,596 @@
+<style>
+/* ============================================================
+   Endless Winning — GHL Login Page Custom CSS
+   Battle-tested: Aesthetics · Mobile · A11y · Motion · Glass
+   ============================================================ */
+
+/* --- Houdini Custom Properties (rotating gradients) --- */
+@property --ew-border-angle {
+  syntax: '<angle>';
+  initial-value: 180deg;
+  inherits: false;
+}
+
+@property --ew-card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* --- Font Loading --- */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('https://school.endlesswinning.com/assets/fonts/gilroy-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('https://school.endlesswinning.com/assets/fonts/gilroy-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Box Model Safety --- */
+.hl_login--body,
+.hl_login--body *,
+.hl_login--body *::before,
+.hl_login--body *::after {
+  box-sizing: border-box !important;
+}
+
+/* --- Page Background --- */
+.hl_login {
+  background: #000000 !important;
+  background-image: radial-gradient(
+    ellipse 600px 400px at 50% 45%,
+    rgba(139, 241, 241, 0.03) 0%,
+    rgba(95, 252, 192, 0.015) 40%,
+    transparent 70%
+  ) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-y: auto !important;
+  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
+}
+
+/* --- Ambient Background Orbs --- */
+.hl_login::before,
+.hl_login::after {
+  content: '' !important;
+  position: fixed !important;
+  border-radius: 50% !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  will-change: transform !important;
+}
+
+.hl_login::before {
+  width: 600px !important;
+  height: 600px !important;
+  top: -15% !important;
+  left: -10% !important;
+  background: radial-gradient(circle, rgba(139, 241, 241, 0.05) 0%, rgba(175, 82, 222, 0.03) 50%, transparent 70%) !important;
+  filter: blur(80px) !important;
+  animation: ewAmbientDrift1 25s ease-in-out infinite !important;
+}
+
+.hl_login::after {
+  width: 500px !important;
+  height: 500px !important;
+  bottom: -10% !important;
+  right: -10% !important;
+  background: radial-gradient(circle, rgba(255, 45, 146, 0.04) 0%, rgba(48, 209, 88, 0.03) 50%, transparent 70%) !important;
+  filter: blur(80px) !important;
+  animation: ewAmbientDrift2 30s ease-in-out infinite !important;
+}
+
+@keyframes ewAmbientDrift1 {
+  0%, 100% { transform: translate(-30%, -30%); }
+  33% { transform: translate(20%, -20%); }
+  66% { transform: translate(-10%, 20%); }
+}
+
+@keyframes ewAmbientDrift2 {
+  0%, 100% { transform: translate(30%, 30%); }
+  33% { transform: translate(-20%, 10%); }
+  66% { transform: translate(10%, -20%); }
+}
+
+/* --- Header Bar --- */
+.hl_login--header {
+  background: #000000 !important;
+  border-bottom: 1px solid rgba(139, 241, 241, 0.06) !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+.hl_login--header img {
+  max-width: 48px !important;
+  height: auto !important;
+}
+
+.hl_login--header span,
+.hl_login--header label,
+.hl_login--header p {
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+}
+
+.hl_login--header select {
+  background: #050810 !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 8px !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 13px !important;
+}
+
+.hl_login--header select:focus-visible {
+  border-color: #8BF1F1 !important;
+  box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.4) !important;
+  outline: none !important;
+}
+
+/* --- Login Box Body (Glass Card) --- */
+div.hl_login--body {
+  position: relative !important;
+  z-index: 1 !important;
+  max-width: 440px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-bottom: 24px !important;
+  background: linear-gradient(
+    168deg,
+    rgba(18, 24, 48, 0.38) 0%,
+    rgba(10, 14, 30, 0.32) 50%,
+    rgba(6, 10, 22, 0.28) 100%
+  ) !important;
+  border-radius: 24px !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid transparent !important;
+  border-top-color: rgba(255, 255, 255, 0.15) !important;
+  border-left-color: rgba(255, 255, 255, 0.08) !important;
+  border-right-color: rgba(255, 255, 255, 0.04) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.02) !important;
+  box-shadow:
+    0 0 40px rgba(139, 241, 241, 0.03),
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2) !important;
+  overflow: hidden !important;
+  will-change: transform, opacity !important;
+  animation: ewFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Specular highlight along top edge */
+div.hl_login--body::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 10% !important;
+  right: 10% !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.12) 30%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(255, 255, 255, 0.12) 70%,
+    transparent 100%
+  ) !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+}
+
+@keyframes ewFadeIn {
+  0% { transform: scale(0.96) translateY(8px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* --- Card Interior --- */
+.hl_login--body .card {
+  background-color: transparent !important;
+  overflow: hidden !important;
+}
+
+.hl_login--body .card .card-body {
+  padding: 44px 36px !important;
+  background-color: transparent !important;
+  overflow-wrap: break-word !important;
+}
+
+/* --- Hide Default Heading --- */
+.hl_login--body .heading2 {
+  font-size: 0px !important;
+  color: transparent !important;
+  margin-bottom: 0px !important;
+  line-height: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+.hl_login--body .heading2::before {
+  display: none !important;
+}
+
+/* --- Form Labels --- */
+.hl_login--body .card-body label,
+.hl_login--body label {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px;
+  line-height: 1.4 !important;
+  transition: color 0.25s ease !important;
+}
+
+/* Label highlight on focus-within */
+.hl_login--body .form-group:focus-within label,
+.hl_login--body div:focus-within > label {
+  color: #8BF1F1 !important;
+}
+
+/* --- Input Fields --- */
+.hl_login--body input.hl-text-input,
+.hl_login .hl_login--body .form-control,
+.hl_login--body input[type="email"],
+.hl_login--body input[type="password"],
+.hl_login--body input[type="text"] {
+  background: rgba(5, 8, 16, 0.65) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 12px !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  padding: 12px 16px !important;
+  min-height: 48px !important;
+  width: 100% !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(0, 0, 0, 0.1) !important;
+  transition: border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+.hl_login--body input.hl-text-input:focus,
+.hl_login .hl_login--body .form-control:focus,
+.hl_login--body input[type="email"]:focus,
+.hl_login--body input[type="password"]:focus,
+.hl_login--body input[type="text"]:focus {
+  border-color: #8BF1F1 !important;
+  box-shadow:
+    0 0 0 3px rgba(139, 241, 241, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(139, 241, 241, 0.06) !important;
+  outline: none !important;
+  animation: ewFocusPulse 3s ease-in-out infinite !important;
+}
+
+@keyframes ewFocusPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.4), inset 0 2px 4px rgba(0,0,0,0.3), 0 0 12px rgba(139, 241, 241, 0.06); }
+  50% { box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.4), inset 0 2px 4px rgba(0,0,0,0.3), 0 0 18px rgba(139, 241, 241, 0.10); }
+}
+
+.hl_login--body input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* --- Input Icons (password eye) --- */
+.hl_login--body svg {
+  color: rgba(255, 255, 255, 0.4) !important;
+  transition: color 0.2s ease !important;
+}
+
+.hl_login--body svg:hover {
+  color: #8BF1F1 !important;
+}
+
+/* --- Sign In Button (Rainbow Glow) --- */
+.hl_login .btn.btn-blue,
+.hl_login .btn.btn-blue:focus {
+  position: relative !important;
+  background: rgba(10, 14, 30, 0.35) !important;
+  background-color: rgba(10, 14, 30, 0.35) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+  border: none !important;
+  border-color: transparent !important;
+  border-radius: 9999px !important;
+  color: #ffffff !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  min-height: 56px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  will-change: transform !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow:
+    0 0 14px rgba(175, 82, 222, 0.44),
+    0 0 14px rgba(255, 45, 146, 0.25),
+    0 0 14px rgba(48, 209, 88, 0.2),
+    0 0 14px rgba(64, 203, 240, 0.25) !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+/* Rainbow gradient border */
+.hl_login .btn.btn-blue::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 9999px !important;
+  padding: 1px !important;
+  background: conic-gradient(from var(--ew-border-angle, 180deg),
+    #AF52DE 0deg, #FF2D92 52deg, #FF6482 82deg, #FF9500 94deg,
+    #FFD60A 124deg, #30D158 180deg, #2EC4B6 236deg, #40CBF0 266deg,
+    #007AFF 278deg, #5856D6 308deg, #AF52DE 360deg
+  ) !important;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+}
+
+.hl_login .btn.btn-blue:hover {
+  background-color: rgba(10, 14, 30, 0.35) !important;
+  border-color: transparent !important;
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 0 24px rgba(175, 82, 222, 0.56),
+    0 0 24px rgba(255, 45, 146, 0.35),
+    0 0 24px rgba(48, 209, 88, 0.3),
+    0 0 24px rgba(64, 203, 240, 0.35) !important;
+  animation: ewBorderRotate 4s linear infinite !important;
+}
+
+@keyframes ewBorderRotate {
+  to { --ew-border-angle: 540deg; }
+}
+
+.hl_login .btn.btn-blue:active {
+  transform: translateY(0) scale(0.98) !important;
+  transition-duration: 0.08s !important;
+  box-shadow:
+    0 0 8px rgba(175, 82, 222, 0.3),
+    0 0 8px rgba(255, 45, 146, 0.15),
+    0 0 8px rgba(48, 209, 88, 0.12),
+    0 0 8px rgba(64, 203, 240, 0.15) !important;
+}
+
+/* Button focus ring */
+.hl_login .btn.btn-blue:focus-visible {
+  box-shadow:
+    0 0 14px rgba(175, 82, 222, 0.44),
+    0 0 14px rgba(255, 45, 146, 0.25),
+    0 0 14px rgba(48, 209, 88, 0.2),
+    0 0 14px rgba(64, 203, 240, 0.25),
+    0 0 0 3px rgba(139, 241, 241, 0.45) !important;
+  outline: none !important;
+}
+
+/* Disabled state */
+.hl_login .btn.btn-blue:disabled,
+.hl_login .btn.btn-blue[disabled] {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.hl_login .btn.btn-blue:disabled::before,
+.hl_login .btn.btn-blue[disabled]::before {
+  opacity: 0.3 !important;
+}
+
+/* Loading state (class added by JS on submit) */
+.hl_login .btn.btn-blue.ew-loading {
+  pointer-events: none !important;
+  opacity: 0.85 !important;
+}
+
+.hl_login .btn.btn-blue.ew-loading .ew-btn-text {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+.hl_login .btn.btn-blue.ew-loading::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: -10px 0 0 -10px !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-top-color: #ffffff !important;
+  border-radius: 50% !important;
+  animation: ewSpin 0.6s linear infinite !important;
+}
+
+@keyframes ewSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Google Sign-In Button --- */
+.hl_login button:not(.btn-blue) {
+  background-color: rgba(5, 8, 16, 0.5) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 12px !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 16px !important;
+  min-height: 52px !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25) !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease,
+              background 0.2s ease,
+              box-shadow 0.3s ease !important;
+}
+
+.hl_login button:not(.btn-blue):hover {
+  background-color: rgba(10, 14, 30, 0.6) !important;
+  border-color: rgba(139, 241, 241, 0.25) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.hl_login button:not(.btn-blue):active {
+  transform: scale(0.98) !important;
+  transition-duration: 0.08s !important;
+}
+
+.hl_login button:not(.btn-blue):focus-visible {
+  border-color: #8BF1F1 !important;
+  box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.4) !important;
+  outline: none !important;
+}
+
+/* --- "Or Continue with" Divider --- */
+.hl_login--body .card-body .flex span,
+.hl_login--body .card-body [class*="divider"] span,
+.hl_login--body .card-body [class*="separator"] span {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 13px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 12px !important;
+}
+
+.hl_login--body hr {
+  border-color: rgba(139, 241, 241, 0.08) !important;
+  border-style: solid !important;
+}
+
+/* --- Links --- */
+.hl_login a,
+.hl_login--body a,
+#forgot_passowrd_btn,
+.hl_login--body .card-body .font-semibold.cursor-pointer.text-curious-blue-500 {
+  color: #8BF1F1 !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  text-decoration: underline !important;
+  text-decoration-color: rgba(139, 241, 241, 0.35) !important;
+  text-underline-offset: 3px !important;
+  transition: text-decoration-color 0.25s ease, opacity 0.2s ease !important;
+}
+
+.hl_login a:hover,
+.hl_login--body a:hover {
+  opacity: 0.85 !important;
+  text-decoration-color: rgba(139, 241, 241, 0.8) !important;
+}
+
+.hl_login a:focus-visible,
+.hl_login--body a:focus-visible {
+  outline: 2px solid #8BF1F1 !important;
+  outline-offset: 3px !important;
+  border-radius: 3px !important;
+}
+
+/* --- General Text --- */
+.hl_login--body .card .card-body p {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 12px !important;
+  line-height: 1.6 !important;
+}
+
+.hl_login--body .card-body .login-card-heading h2 {
+  color: #ffffff !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+}
+
+/* --- Focus outline override --- */
+.hl_login--body .card-body div .focus\:outline-none {
+  border-style: none !important;
+  border-radius: 9999px !important;
+}
+
+/* --- Footer --- */
+.hl_login--footer {
+  background: transparent !important;
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  div.hl_login--body {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+
+  .hl_login::before,
+  .hl_login::after {
+    animation: none !important;
+  }
+
+  .hl_login .btn.btn-blue,
+  .hl_login .btn.btn-blue:hover,
+  .hl_login button:not(.btn-blue),
+  .hl_login--body input,
+  .hl_login--body label {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .hl_login--body input:focus {
+    animation: none !important;
+  }
+}
+
+/* --- Responsive: Tablet --- */
+@media only screen and (max-width: 1000px) {
+  div.hl_login--body {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: calc(100% - 32px) !important;
+  }
+}
+
+/* --- Responsive: Phone --- */
+@media (max-width: 480px) {
+  .hl_login--body .card .card-body {
+    padding: 32px 24px !important;
+  }
+
+  .hl_login::before { width: 300px !important; height: 300px !important; }
+  .hl_login::after { width: 250px !important; height: 250px !important; }
+}
+
+/* --- Responsive: Very Small Phone (iPhone SE, Galaxy Fold) --- */
+@media (max-width: 350px) {
+  .hl_login--body .card .card-body {
+    padding: 28px 16px !important;
+  }
+
+  div.hl_login--body {
+    max-width: calc(100% - 24px) !important;
+  }
+}
+
+/* --- Responsive: Landscape / Keyboard Open --- */
+@media (max-height: 500px) {
+  .hl_login {
+    justify-content: flex-start !important;
+    padding-top: 16px !important;
+  }
+}
+</style>
