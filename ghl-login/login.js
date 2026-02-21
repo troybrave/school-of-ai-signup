@@ -1,18 +1,21 @@
 /* ============================================
    Endless Winning — GHL Login Page Custom JS
    Paste into: Settings > Company > Custom Javascript
+   (with <script> tags)
+
+   Handles: footer injection, loading state,
+   mouse-tracked shimmer, label a11y.
+   Branding text + tagline are now CSS-only.
    ============================================ */
 
 (function () {
   'use strict';
 
   /* --- Configuration --- */
-  var BRAND_ID    = 'ew-brand-text';
-  var TAGLINE_ID  = 'ew-tagline';
-  var FOOTER_ID   = 'ew-footer';
-  var SHIMMER_ID  = 'ew-shimmer';
-  var MAX_WAIT    = 15000;
-  var POLL_MS     = 150;
+  var FOOTER_ID  = 'ew-footer';
+  var SHIMMER_ID = 'ew-shimmer';
+  var MAX_WAIT   = 15000;
+  var POLL_MS    = 150;
 
   /* --- Reduced motion check --- */
   var prefersReducedMotion = window.matchMedia
@@ -20,11 +23,12 @@
     : false;
 
   /* --- State --- */
-  var observer    = null;
-  var pollTimer   = null;
-  var startTime   = Date.now();
+  var observer  = null;
+  var pollTimer = null;
+  var startTime = Date.now();
+  var injected  = false;
 
-  /* --- Entry point: try MutationObserver first, polling as fallback --- */
+  /* --- Entry point: MutationObserver primary, polling fallback --- */
   if (typeof MutationObserver !== 'undefined') {
     observer = new MutationObserver(function () {
       attemptInjection();
@@ -33,10 +37,8 @@
       childList: true,
       subtree: true
     });
-    /* Also try immediately in case DOM is already there */
     attemptInjection();
   } else {
-    /* IE11 / older browser fallback: polling */
     pollTimer = setInterval(function () {
       attemptInjection();
       if (Date.now() - startTime > MAX_WAIT) {
@@ -45,144 +47,31 @@
     }, POLL_MS);
   }
 
-  /* Safety net: stop observer/polling after MAX_WAIT regardless */
-  setTimeout(function () {
-    stopWatching();
-  }, MAX_WAIT);
+  setTimeout(function () { stopWatching(); }, MAX_WAIT);
 
-  /**
-   * Attempt to find the anchor and inject branding.
-   * Called from both MutationObserver and polling fallback.
-   * Safe to call repeatedly -- exits early if already injected.
-   */
   function attemptInjection() {
-    /* Already injected and still in DOM? Nothing to do. */
-    if (document.getElementById(BRAND_ID)) return;
+    if (injected) return;
 
-    var cardBody = findCardBody();
-    if (!cardBody) return;
+    var loginBody = document.querySelector('.hl_login--body');
+    if (!loginBody) return;
 
     try {
-      injectBranding(cardBody);
+      injectFooter();
       initLoadingState();
       if (!prefersReducedMotion) {
         initCardShimmer();
       }
+      associateLabels();
+      injected = true;
+      stopWatching();
     } catch (e) {
-      /* Swallow errors so GHL's script pipeline continues */
       if (typeof console !== 'undefined' && console.warn) {
-        console.warn('[EW Login] Branding injection failed:', e);
+        console.warn('[EW Login] Enhancement failed:', e);
       }
     }
   }
 
-  /**
-   * Find the card-body element using multiple selectors for resilience.
-   * GHL has used different DOM structures across versions.
-   */
-  function findCardBody() {
-    var selectors = [
-      '.hl_login--body .card .card-body',
-      '.hl_login--body .card-body',
-      '.hl_login--body .card'
-    ];
-    for (var i = 0; i < selectors.length; i++) {
-      var el = document.querySelector(selectors[i]);
-      if (el) return el;
-    }
-    return null;
-  }
-
-  /**
-   * Inject the brand text, tagline, and footer.
-   * All DOM operations are wrapped defensively.
-   */
-  function injectBranding(cardBody) {
-    /* Double-check: another call may have injected between our check and now */
-    if (document.getElementById(BRAND_ID)) return;
-
-    /* --- Determine insertion anchor --- */
-    var anchor = null;
-    var anchorParent = cardBody;
-
-    /* Prefer inserting after the heading element if it exists */
-    var heading = cardBody.querySelector('.heading2')
-      || cardBody.querySelector('h1')
-      || cardBody.querySelector('[class*="heading"]');
-
-    if (heading) {
-      anchor = heading.nextSibling;
-      anchorParent = heading.parentNode;
-    } else {
-      /* Fallback: insert before the first form element or first child */
-      var firstForm = cardBody.querySelector('form')
-        || cardBody.querySelector('[class*="form"]')
-        || cardBody.querySelector('label');
-      anchor = firstForm || cardBody.firstChild;
-      anchorParent = cardBody;
-    }
-
-    /* --- "ENDLESS WINNING" rainbow glow text --- */
-    var brandText = document.createElement('div');
-    brandText.id = BRAND_ID;
-    brandText.textContent = 'ENDLESS WINNING';
-    brandText.style.cssText = [
-      'text-align: center !important',
-      'font-family: Gilroy, system-ui, -apple-system, sans-serif !important',
-      'font-size: 22px !important',
-      'font-weight: 700 !important',
-      'letter-spacing: 5px !important',
-      'color: #ffffff !important',
-      'text-transform: uppercase !important',
-      'margin: -8px 0 2px 0 !important',
-      'line-height: 1.3 !important',
-      '-webkit-font-smoothing: antialiased !important',
-      '-moz-osx-font-smoothing: grayscale !important',
-      'text-shadow: ' +
-        '-5px -3px 14px #AF52DE, ' +
-        '-3px -5px 12px #FF2D92, ' +
-        '3px -5px 12px #FF9500, ' +
-        '5px -3px 12px #FFD60A, ' +
-        '5px 3px 12px #30D158, ' +
-        '3px 5px 12px #2EC4B6, ' +
-        '-3px 5px 12px #40CBF0, ' +
-        '-5px 3px 12px #007AFF, ' +
-        '0 0 30px rgba(88, 86, 214, 0.35) !important'
-    ].join('; ');
-
-    /* --- Tagline --- */
-    var tagline = document.createElement('div');
-    tagline.id = TAGLINE_ID;
-    tagline.textContent = 'Your command center awaits';
-    tagline.style.cssText = [
-      'text-align: center !important',
-      'font-family: Gilroy, system-ui, -apple-system, sans-serif !important',
-      'font-size: 13px !important',
-      'font-weight: 400 !important',
-      'color: rgba(255, 255, 255, 0.5) !important',
-      'margin-bottom: 24px !important',
-      'letter-spacing: 0.5px !important',
-      '-webkit-font-smoothing: antialiased !important',
-      '-moz-osx-font-smoothing: grayscale !important'
-    ].join('; ');
-
-    /* Insert: brandText first, then tagline below it */
-    anchorParent.insertBefore(tagline, anchor);
-    anchorParent.insertBefore(brandText, tagline);
-
-    /* --- Footer below the login box --- */
-    injectFooter();
-
-    /* If we successfully injected and are using MutationObserver,
-       keep watching -- GHL SPA navigation may destroy and rebuild the DOM.
-       The observer callback re-checks getElementById so it will re-inject
-       only if the elements were removed. We stop after MAX_WAIT. */
-  }
-
-  /**
-   * Inject the footer after the login body.
-   * Separated for clarity and independent null-checking.
-   */
+  /* --- Footer below the login card --- */
   function injectFooter() {
     if (document.getElementById(FOOTER_ID)) return;
 
@@ -195,8 +84,8 @@
       'text-align: center !important',
       'font-family: Gilroy, system-ui, -apple-system, sans-serif !important',
       'font-size: 11px !important',
-      'color: rgba(255, 255, 255, 0.2) !important',
-      'padding: 20px 0 24px 0 !important',
+      'color: rgba(255, 255, 255, 0.5) !important',
+      'padding: 24px 0 !important',
       '-webkit-font-smoothing: antialiased !important'
     ].join('; ');
 
@@ -209,8 +98,10 @@
     footerLink.rel = 'noopener';
     footerLink.textContent = 'endlesswinning.com';
     footerLink.style.cssText = [
-      'color: rgba(255, 255, 255, 0.2) !important',
-      'text-decoration: none !important',
+      'color: rgba(255, 255, 255, 0.5) !important',
+      'text-decoration: underline !important',
+      'text-decoration-color: rgba(255, 255, 255, 0.2) !important',
+      'text-underline-offset: 3px !important',
       'font-size: 11px !important',
       'display: inline-block !important',
       'margin-top: 4px !important'
@@ -219,8 +110,6 @@
     footer.appendChild(footerLine1);
     footer.appendChild(footerLink);
 
-    /* Insert footer after the login body.
-       Use appendChild on parent if nextSibling is null (loginBody is last child) */
     if (loginBody.nextSibling) {
       loginBody.parentNode.insertBefore(footer, loginBody.nextSibling);
     } else {
@@ -228,18 +117,13 @@
     }
   }
 
-  /* ==========================================
-     LOADING STATE
-     Wraps button text in a span for fade control,
-     adds .ew-loading class on form submit,
-     with 8s auto-recovery failsafe.
-     ========================================== */
+  /* --- Loading State: spinner on submit --- */
   function initLoadingState() {
     var form = document.querySelector('.hl_login--body form');
     var btn = document.querySelector('.hl_login .btn.btn-blue');
     if (!form || !btn) return;
 
-    /* Wrap existing text content in a span for opacity control */
+    /* Wrap button text in span for fade control */
     var children = btn.childNodes;
     for (var i = 0; i < children.length; i++) {
       var node = children[i];
@@ -252,29 +136,20 @@
       }
     }
 
-    /* If no text node was found, look for existing span/child text elements */
     if (!btn.querySelector('.ew-btn-text')) {
       var existingText = btn.querySelector('span, strong, b');
-      if (existingText) {
-        existingText.classList.add('ew-btn-text');
-      }
+      if (existingText) existingText.classList.add('ew-btn-text');
     }
 
     form.addEventListener('submit', function () {
       btn.classList.add('ew-loading');
-      /* Auto-remove after 8s failsafe -- in case the page doesn't navigate */
       setTimeout(function () {
         btn.classList.remove('ew-loading');
       }, 8000);
     });
   }
 
-  /* ==========================================
-     CARD GLASS SHIMMER
-     Mouse-tracked radial gradient reflection
-     that follows the cursor over the card.
-     4% opacity of brand cyan -- subliminal.
-     ========================================== */
+  /* --- Card Glass Shimmer (mouse-tracked) --- */
   function initCardShimmer() {
     if (document.getElementById(SHIMMER_ID)) return;
 
@@ -313,17 +188,26 @@
     });
   }
 
-  /**
-   * Stop all watchers. Called on MAX_WAIT timeout.
-   */
+  /* --- Associate Labels with Inputs (a11y) --- */
+  function associateLabels() {
+    var labels = document.querySelectorAll('.hl_login--body label');
+    for (var i = 0; i < labels.length; i++) {
+      var label = labels[i];
+      if (label.getAttribute('for')) continue;
+      var parent = label.parentElement;
+      var input = parent ? (parent.querySelector('input') ||
+        (label.nextElementSibling && label.nextElementSibling.querySelector
+          ? label.nextElementSibling.querySelector('input') : null)) : null;
+      if (input && !input.id) {
+        var inputId = 'ew-input-' + i;
+        input.id = inputId;
+        label.setAttribute('for', inputId);
+      }
+    }
+  }
+
   function stopWatching() {
-    if (observer) {
-      observer.disconnect();
-      observer = null;
-    }
-    if (pollTimer) {
-      clearInterval(pollTimer);
-      pollTimer = null;
-    }
+    if (observer) { observer.disconnect(); observer = null; }
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   }
 })();

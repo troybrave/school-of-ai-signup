@@ -3,12 +3,10 @@
   'use strict';
 
   /* --- Configuration --- */
-  var BRAND_ID    = 'ew-brand-text';
-  var TAGLINE_ID  = 'ew-tagline';
-  var FOOTER_ID   = 'ew-footer';
-  var SHIMMER_ID  = 'ew-shimmer';
-  var MAX_WAIT    = 15000;
-  var POLL_MS     = 150;
+  var FOOTER_ID  = 'ew-footer';
+  var SHIMMER_ID = 'ew-shimmer';
+  var MAX_WAIT   = 15000;
+  var POLL_MS    = 150;
 
   /* --- Reduced motion check --- */
   var prefersReducedMotion = window.matchMedia
@@ -16,9 +14,10 @@
     : false;
 
   /* --- State --- */
-  var observer    = null;
-  var pollTimer   = null;
-  var startTime   = Date.now();
+  var observer  = null;
+  var pollTimer = null;
+  var startTime = Date.now();
+  var injected  = false;
 
   /* --- Entry point: MutationObserver primary, polling fallback --- */
   if (typeof MutationObserver !== 'undefined') {
@@ -42,119 +41,28 @@
   setTimeout(function () { stopWatching(); }, MAX_WAIT);
 
   function attemptInjection() {
-    if (document.getElementById(BRAND_ID)) return;
+    if (injected) return;
 
-    var cardBody = findCardBody();
-    if (!cardBody) return;
+    var loginBody = document.querySelector('.hl_login--body');
+    if (!loginBody) return;
 
     try {
-      injectBranding(cardBody);
+      injectFooter();
       initLoadingState();
       if (!prefersReducedMotion) {
         initCardShimmer();
       }
       associateLabels();
+      injected = true;
+      stopWatching();
     } catch (e) {
       if (typeof console !== 'undefined' && console.warn) {
-        console.warn('[EW Login] Branding injection failed:', e);
+        console.warn('[EW Login] Enhancement failed:', e);
       }
     }
   }
 
-  function findCardBody() {
-    var selectors = [
-      '.hl_login--body .card .card-body',
-      '.hl_login--body .card-body',
-      '.hl_login--body .card'
-    ];
-    for (var i = 0; i < selectors.length; i++) {
-      var el = document.querySelector(selectors[i]);
-      if (el) return el;
-    }
-    return null;
-  }
-
-  function injectBranding(cardBody) {
-    if (document.getElementById(BRAND_ID)) return;
-
-    /* Hide original heading from screen readers */
-    var originalHeading = cardBody.querySelector('.heading2');
-    if (originalHeading) {
-      originalHeading.setAttribute('aria-hidden', 'true');
-    }
-
-    /* --- Determine insertion anchor --- */
-    var anchor = null;
-    var anchorParent = cardBody;
-
-    var heading = cardBody.querySelector('.heading2')
-      || cardBody.querySelector('h1')
-      || cardBody.querySelector('[class*="heading"]');
-
-    if (heading) {
-      anchor = heading.nextSibling;
-      anchorParent = heading.parentNode;
-    } else {
-      var firstForm = cardBody.querySelector('form')
-        || cardBody.querySelector('[class*="form"]')
-        || cardBody.querySelector('label');
-      anchor = firstForm || cardBody.firstChild;
-      anchorParent = cardBody;
-    }
-
-    /* --- "ENDLESS WINNING" rainbow glow text (semantic h1) --- */
-    var brandText = document.createElement('h1');
-    brandText.id = BRAND_ID;
-    brandText.setAttribute('role', 'heading');
-    brandText.setAttribute('aria-level', '1');
-    brandText.textContent = 'ENDLESS WINNING';
-    brandText.style.cssText = [
-      'text-align: center !important',
-      'font-family: Gilroy, system-ui, -apple-system, sans-serif !important',
-      'font-size: 24px !important',
-      'font-weight: 700 !important',
-      'letter-spacing: 4.5px !important',
-      'color: #ffffff !important',
-      'text-transform: uppercase !important',
-      'margin: 0 0 4px 0 !important',
-      'padding: 0 !important',
-      'line-height: 1.3 !important',
-      '-webkit-font-smoothing: antialiased !important',
-      '-moz-osx-font-smoothing: grayscale !important',
-      'text-shadow: ' +
-        '-5px -3px 14px #AF52DE, ' +
-        '-3px -5px 12px #FF2D92, ' +
-        '3px -5px 12px #FF9500, ' +
-        '5px -3px 12px #FFD60A, ' +
-        '5px 3px 12px #30D158, ' +
-        '3px 5px 12px #2EC4B6, ' +
-        '-3px 5px 12px #40CBF0, ' +
-        '-5px 3px 12px #007AFF, ' +
-        '0 0 30px rgba(88, 86, 214, 0.35) !important'
-    ].join('; ');
-
-    /* --- Tagline --- */
-    var tagline = document.createElement('div');
-    tagline.id = TAGLINE_ID;
-    tagline.textContent = 'Your command center awaits';
-    tagline.style.cssText = [
-      'text-align: center !important',
-      'font-family: Gilroy, system-ui, -apple-system, sans-serif !important',
-      'font-size: 13px !important',
-      'font-weight: 400 !important',
-      'color: rgba(255, 255, 255, 0.6) !important',
-      'margin-bottom: 28px !important',
-      'letter-spacing: 0.5px !important',
-      '-webkit-font-smoothing: antialiased !important',
-      '-moz-osx-font-smoothing: grayscale !important'
-    ].join('; ');
-
-    anchorParent.insertBefore(tagline, anchor);
-    anchorParent.insertBefore(brandText, tagline);
-
-    injectFooter();
-  }
-
+  /* --- Footer below the login card --- */
   function injectFooter() {
     if (document.getElementById(FOOTER_ID)) return;
 
@@ -200,7 +108,7 @@
     }
   }
 
-  /* --- Loading State --- */
+  /* --- Loading State: spinner on submit --- */
   function initLoadingState() {
     var form = document.querySelector('.hl_login--body form');
     var btn = document.querySelector('.hl_login .btn.btn-blue');
