@@ -1,0 +1,232 @@
+/* ============================================
+   Endless Winning — GHL Login Page Custom CSS
+   Paste into: Settings > Company > Custom CSS
+   ============================================ */
+
+/* --- Font Loading --- */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('https://school.endlesswinning.com/assets/fonts/gilroy-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Gilroy';
+  src: url('https://school.endlesswinning.com/assets/fonts/gilroy-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* --- Page Background --- */
+.hl_login {
+  background: #000000 !important;
+  font-family: 'Gilroy', system-ui, -apple-system, sans-serif !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Logo --- */
+.hl_login--header {
+  text-align: center;
+  margin-bottom: 0 !important;
+}
+
+.hl_login--header img {
+  max-width: 80px !important;
+  height: auto !important;
+}
+
+/* --- Hide default heading (replaced by JS) --- */
+.hl_login--body .heading2,
+.hl_login--header h1,
+.hl_login--header h2 {
+  display: none !important;
+}
+
+/* --- Glass Card --- */
+.hl_login--body .card,
+.hl_login--body .hl-card {
+  background: rgba(12, 16, 32, 0.35) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  backdrop-filter: blur(24px) !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(139, 241, 241, 0.08) !important;
+  box-shadow: none !important;
+  padding: 40px 36px !important;
+  max-width: 420px !important;
+  width: 100% !important;
+}
+
+/* --- Form Labels --- */
+.hl_login label,
+.hl_login .form-label,
+.hl_login--body label {
+  color: rgba(255, 255, 255, 0.85) !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.3px;
+  margin-bottom: 6px !important;
+}
+
+/* --- Input Fields --- */
+.hl_login .form-control,
+.hl_login--body input.hl-text-input,
+.hl_login--body input[type="email"],
+.hl_login--body input[type="password"],
+.hl_login--body input[type="text"] {
+  background: #050810 !important;
+  border: 1px solid rgba(139, 241, 241, 0.12) !important;
+  border-radius: 12px !important;
+  color: #ffffff !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 15px !important;
+  padding: 12px 16px !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.hl_login .form-control:focus,
+.hl_login--body input.hl-text-input:focus,
+.hl_login--body input[type="email"]:focus,
+.hl_login--body input[type="password"]:focus,
+.hl_login--body input[type="text"]:focus {
+  border-color: #8BF1F1 !important;
+  box-shadow: 0 0 0 3px rgba(139, 241, 241, 0.15) !important;
+  outline: none !important;
+}
+
+.hl_login .form-control::placeholder,
+.hl_login--body input::placeholder {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* --- Sign In Button (Rainbow Glow) --- */
+.hl_login .btn.btn-blue,
+.hl_login--body button[type="submit"],
+.hl_login--body .btn-primary {
+  position: relative !important;
+  background: rgba(10, 14, 30, 0.35) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+  backdrop-filter: blur(4px) !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  color: #ffffff !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  padding: 14px 32px !important;
+  width: 100% !important;
+  cursor: pointer !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  transition: transform 0.2s ease, box-shadow 0.3s ease !important;
+  box-shadow:
+    0 0 14px rgba(175, 82, 222, 0.44),
+    0 0 14px rgba(255, 45, 146, 0.25),
+    0 0 14px rgba(48, 209, 88, 0.2),
+    0 0 14px rgba(64, 203, 240, 0.25) !important;
+}
+
+.hl_login .btn.btn-blue::before,
+.hl_login--body button[type="submit"]::before,
+.hl_login--body .btn-primary::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 9999px !important;
+  padding: 1.5px !important;
+  background: conic-gradient(from 180deg,
+    #AF52DE 0deg, #FF2D92 52deg, #FF6482 82deg, #FF9500 94deg,
+    #FFD60A 124deg, #30D158 180deg, #2EC4B6 236deg, #40CBF0 266deg,
+    #007AFF 278deg, #5856D6 308deg, #AF52DE 360deg
+  ) !important;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) !important;
+  -webkit-mask-composite: xor !important;
+  mask-composite: exclude !important;
+  pointer-events: none !important;
+}
+
+.hl_login .btn.btn-blue:hover,
+.hl_login--body button[type="submit"]:hover,
+.hl_login--body .btn-primary:hover {
+  transform: translateY(-1px) !important;
+  box-shadow:
+    0 0 20px rgba(175, 82, 222, 0.56),
+    0 0 20px rgba(255, 45, 146, 0.35),
+    0 0 20px rgba(48, 209, 88, 0.3),
+    0 0 20px rgba(64, 203, 240, 0.35) !important;
+}
+
+.hl_login .btn.btn-blue:active,
+.hl_login--body button[type="submit"]:active,
+.hl_login--body .btn-primary:active {
+  transform: translateY(0) !important;
+}
+
+/* --- Links --- */
+.hl_login a,
+.hl_login--body a {
+  color: #8BF1F1 !important;
+  text-decoration: none !important;
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+  transition: opacity 0.2s ease !important;
+}
+
+.hl_login a:hover,
+.hl_login--body a:hover {
+  opacity: 0.8 !important;
+  text-decoration: underline !important;
+}
+
+/* --- General Text --- */
+.hl_login p,
+.hl_login span,
+.hl_login div {
+  font-family: 'Gilroy', system-ui, sans-serif !important;
+}
+
+/* --- Checkbox / Remember Me --- */
+.hl_login .form-check-label,
+.hl_login--body .form-check-label {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 13px !important;
+}
+
+/* --- Form Groups Spacing --- */
+.hl_login .form-group,
+.hl_login--body .form-group {
+  margin-bottom: 20px !important;
+}
+
+/* --- Remove any default white backgrounds --- */
+.hl_login--body,
+.hl_login--footer {
+  background: transparent !important;
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .hl_login--body .card,
+  .hl_login--body .hl-card {
+    padding: 32px 24px !important;
+    border-radius: 20px !important;
+    margin: 0 16px !important;
+  }
+
+  .hl_login--header img {
+    max-width: 64px !important;
+  }
+
+  .hl_login .btn.btn-blue,
+  .hl_login--body button[type="submit"],
+  .hl_login--body .btn-primary {
+    font-size: 16px !important;
+    padding: 13px 28px !important;
+  }
+}

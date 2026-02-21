@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EW Login Preview — app.endlesswinning.com</title>
+  <style>
+    /* Reset to simulate GHL base */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { margin: 0; padding: 0; background: #000; }
+    .form-group { margin-bottom: 16px; }
+    .form-control { display: block; width: 100%; padding: 10px 14px; font-size: 15px; border: 1px solid #ccc; border-radius: 6px; background: #fff; color: #333; }
+    label, .form-label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; color: #333; }
+    .btn { display: inline-block; padding: 12px 24px; font-size: 16px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; text-align: center; width: 100%; }
+    .btn-blue, .btn-primary { background: #007bff; color: #fff; }
+    .form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .form-check-input { width: 16px; height: 16px; }
+    .form-check-label { font-size: 13px; color: #666; }
+    a { color: #007bff; text-decoration: none; }
+    .heading2 { font-size: 22px; font-weight: 600; text-align: center; margin-bottom: 16px; }
+    .card { background: #fff; border-radius: 8px; padding: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  </style>
+
+  <!-- === YOUR CUSTOM CSS (login.css) === -->
+  <link rel="stylesheet" href="login.css">
+</head>
+<body>
+
+  <!-- Simulated GHL .hl_login structure -->
+  <div class="hl_login">
+
+    <div class="hl_login--header">
+      <!-- Placeholder logo — replace src with actual EW icon URL -->
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' rx='24' fill='%23050810'/%3E%3Cpath d='M45 80 L65 100 L115 50' stroke='%2340CBF0' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3Cpath d='M45 95 L65 115 L115 65' stroke='%235FFCC0' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.5'/%3E%3C/svg%3E" alt="Endless Winning">
+    </div>
+
+    <div class="hl_login--body">
+      <div class="card">
+        <div class="heading2">Sign In</div>
+
+        <form onsubmit="event.preventDefault(); alert('Login form submitted (preview only)');">
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control hl-text-input" placeholder="you@example.com">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control hl-text-input" placeholder="Enter your password">
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="remember">
+            <label class="form-check-label" for="remember">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn btn-blue btn-primary">Sign In</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 16px;">
+          <a href="#">Forgot password?</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- === YOUR CUSTOM JS (login.js) === -->
+  <script src="login.js"></script>
+
+</body>
+</html>
