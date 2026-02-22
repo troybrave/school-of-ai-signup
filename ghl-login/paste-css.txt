@@ -311,7 +311,19 @@ div.hl_login--body::after {
   font-weight: 700 !important;
   letter-spacing: 0.4px;
   line-height: 1.4 !important;
+  background: transparent !important;
+  background-color: transparent !important;
   transition: color 0.25s ease !important;
+}
+
+/* --- Form groups / fieldsets — kill GHL background boxes --- */
+.hl_login--body .form-group,
+.hl_login--body .card-body > div,
+.hl_login--body .card-body form > div {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .hl_login--body .form-group:focus-within label,
@@ -359,7 +371,7 @@ div.hl_login--body::after {
   color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* --- Input Icons (password eye) --- */
+/* --- Password eye icon + container --- */
 .hl_login--body svg {
   color: rgba(255, 255, 255, 0.4) !important;
   transition: color 0.2s ease !important;
@@ -367,6 +379,21 @@ div.hl_login--body::after {
 
 .hl_login--body svg:hover {
   color: #8BF1F1 !important;
+}
+
+/* Kill the border/background on the eye icon's wrapper div */
+.hl_login--body .form-group div[class],
+.hl_login--body .card-body .form-group > div,
+.hl_login--body input[type="password"] ~ div,
+.hl_login--body input[type="password"] + div,
+.hl_login--body [class*="password"] div,
+.hl_login--body .card-body button[type="button"]:has(svg),
+.hl_login--body .card-body div:has(> svg) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* ==========================================================
@@ -516,28 +543,42 @@ body .hl_login .hl_login--body .btn.btn-blue.ew-loading::after {
 
 /* ==========================================================
    "OR CONTINUE WITH" DIVIDER
-   Solid opaque background prevents strikethrough appearance
+   Use gradient hr lines that fade at edges so the span
+   doesn't need a background to cover them.
    ========================================================== */
 .hl_login--body .card-body .flex > span,
 .hl_login--body .card-body [class*="flex"] > span,
 .hl_login--body .card-body [class*="divider"] > span,
 .hl_login--body .card-body [class*="separator"] > span {
-  color: rgba(255, 255, 255, 0.6) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 13px !important;
-  background: #080c18 !important;
-  background-color: #080c18 !important;
+  background: transparent !important;
+  background-color: transparent !important;
   padding: 0 16px !important;
-  position: relative !important;
-  z-index: 1 !important;
   text-decoration: none !important;
   white-space: nowrap !important;
 }
 
+/* Use gradient lines that fade to transparent near the text */
 .hl_login--body hr {
-  border-color: rgba(139, 241, 241, 0.08) !important;
-  border-style: solid !important;
-  border-width: 1px 0 0 0 !important;
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(139, 241, 241, 0.12),
+    rgba(139, 241, 241, 0.06)
+  ) !important;
+}
+
+/* Reverse gradient for the second hr (right side) */
+.hl_login--body .card-body .flex > hr:last-child,
+.hl_login--body .card-body [class*="flex"] > hr:last-child {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 241, 241, 0.06),
+    rgba(139, 241, 241, 0.12)
+  ) !important;
 }
 
 /* --- Links --- */
