@@ -371,21 +371,28 @@ div.hl_login--body::after {
 
 /* ==========================================================
    SIGN IN BUTTON — RAINBOW GLOW
-   Uses double-background (padding-box + border-box) approach
-   instead of mask-composite which fails in some contexts
+   Uses separated longhand properties (background-image,
+   background-clip, background-origin) to prevent GHL's
+   .btn-blue shorthand from overriding. Extra-high specificity.
    ========================================================== */
-.hl_login .btn.btn-blue,
-.hl_login .btn.btn-blue:focus {
+body .hl_login .hl_login--body .card .card-body .btn.btn-blue,
+body .hl_login .hl_login--body .card .card-body .btn.btn-blue:focus,
+body .hl_login .hl_login--body .btn.btn-blue,
+body .hl_login .hl_login--body .btn.btn-blue:focus {
   position: relative !important;
   border: 2px solid transparent !important;
   border-radius: 9999px !important;
-  background:
-    linear-gradient(#0a0e1e, #0a0e1e) padding-box,
-    conic-gradient(from var(--ew-border-angle, 180deg),
+  /* Longhand properties resist GHL shorthand overrides */
+  background-color: #0a0e1e !important;
+  background-image:
+    linear-gradient(#0a0e1e, #0a0e1e),
+    conic-gradient(from 180deg,
       #AF52DE 0deg, #FF2D92 52deg, #FF6482 82deg, #FF9500 94deg,
       #FFD60A 124deg, #30D158 180deg, #2EC4B6 236deg, #40CBF0 266deg,
       #007AFF 278deg, #5856D6 308deg, #AF52DE 360deg
-    ) border-box !important;
+    ) !important;
+  background-origin: padding-box, border-box !important;
+  background-clip: padding-box, border-box !important;
   color: #ffffff !important;
   font-family: 'Gilroy', system-ui, sans-serif !important;
   font-size: 17px !important;
@@ -399,49 +406,44 @@ div.hl_login--body::after {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
   box-shadow:
-    0 0 14px rgba(175, 82, 222, 0.44),
-    0 0 14px rgba(255, 45, 146, 0.25),
-    0 0 14px rgba(48, 209, 88, 0.2),
-    0 0 14px rgba(64, 203, 240, 0.25) !important;
+    0 0 18px rgba(175, 82, 222, 0.5),
+    0 0 18px rgba(255, 45, 146, 0.3),
+    0 0 18px rgba(48, 209, 88, 0.25),
+    0 0 18px rgba(64, 203, 240, 0.3) !important;
   -webkit-font-smoothing: antialiased !important;
 }
 
-.hl_login .btn.btn-blue:hover {
+body .hl_login .hl_login--body .btn.btn-blue:hover {
   transform: translateY(-2px) !important;
   box-shadow:
-    0 0 24px rgba(175, 82, 222, 0.56),
-    0 0 24px rgba(255, 45, 146, 0.35),
-    0 0 24px rgba(48, 209, 88, 0.3),
-    0 0 24px rgba(64, 203, 240, 0.35) !important;
-  animation: ewBorderRotate 4s linear infinite !important;
+    0 0 28px rgba(175, 82, 222, 0.6),
+    0 0 28px rgba(255, 45, 146, 0.4),
+    0 0 28px rgba(48, 209, 88, 0.35),
+    0 0 28px rgba(64, 203, 240, 0.4) !important;
 }
 
-@keyframes ewBorderRotate {
-  to { --ew-border-angle: 540deg; }
-}
-
-.hl_login .btn.btn-blue:active {
+body .hl_login .hl_login--body .btn.btn-blue:active {
   transform: translateY(0) scale(0.98) !important;
   transition-duration: 0.08s !important;
   box-shadow:
-    0 0 8px rgba(175, 82, 222, 0.3),
-    0 0 8px rgba(255, 45, 146, 0.15),
-    0 0 8px rgba(48, 209, 88, 0.12),
-    0 0 8px rgba(64, 203, 240, 0.15) !important;
+    0 0 10px rgba(175, 82, 222, 0.35),
+    0 0 10px rgba(255, 45, 146, 0.2),
+    0 0 10px rgba(48, 209, 88, 0.15),
+    0 0 10px rgba(64, 203, 240, 0.2) !important;
 }
 
-.hl_login .btn.btn-blue:focus-visible {
+body .hl_login .hl_login--body .btn.btn-blue:focus-visible {
   box-shadow:
-    0 0 14px rgba(175, 82, 222, 0.44),
-    0 0 14px rgba(255, 45, 146, 0.25),
-    0 0 14px rgba(48, 209, 88, 0.2),
-    0 0 14px rgba(64, 203, 240, 0.25),
+    0 0 18px rgba(175, 82, 222, 0.5),
+    0 0 18px rgba(255, 45, 146, 0.3),
+    0 0 18px rgba(48, 209, 88, 0.25),
+    0 0 18px rgba(64, 203, 240, 0.3),
     0 0 0 3px rgba(139, 241, 241, 0.45) !important;
   outline: none !important;
 }
 
-.hl_login .btn.btn-blue:disabled,
-.hl_login .btn.btn-blue[disabled] {
+body .hl_login .hl_login--body .btn.btn-blue:disabled,
+body .hl_login .hl_login--body .btn.btn-blue[disabled] {
   opacity: 0.4 !important;
   cursor: not-allowed !important;
   transform: none !important;
@@ -449,17 +451,17 @@ div.hl_login--body::after {
 }
 
 /* Loading state (class added by JS on submit) */
-.hl_login .btn.btn-blue.ew-loading {
+body .hl_login .hl_login--body .btn.btn-blue.ew-loading {
   pointer-events: none !important;
   opacity: 0.85 !important;
 }
 
-.hl_login .btn.btn-blue.ew-loading .ew-btn-text {
+body .hl_login .hl_login--body .btn.btn-blue.ew-loading .ew-btn-text {
   opacity: 0 !important;
   transition: opacity 0.2s ease !important;
 }
 
-.hl_login .btn.btn-blue.ew-loading::after {
+body .hl_login .hl_login--body .btn.btn-blue.ew-loading::after {
   content: '' !important;
   position: absolute !important;
   top: 50% !important;
