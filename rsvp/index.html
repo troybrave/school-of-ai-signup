@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>School of AI - RSVP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('../assets/fonts/gilroy-regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('../assets/fonts/gilroy-regular.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('../assets/fonts/gilroy-bold.woff2') format('woff2');
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Gilroy';
+      src: url('../assets/fonts/gilroy-bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Gilroy', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    .gradient-title {
+      background: linear-gradient(4.67deg, #389ABF 4.69%, #8BF1F1 51.21%, #5FFCC0 95.94%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-glow-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .btn-glow-outer {
+      position: absolute;
+      inset: -3px;
+      border-radius: 9999px;
+      background: conic-gradient(from 180deg,
+        #AF52DE 0deg,
+        #FF2D92 52deg,
+        #FF6482 82deg,
+        #FF9500 94deg,
+        #FFD60A 124deg,
+        #30D158 180deg,
+        #2EC4B6 236deg,
+        #40CBF0 266deg,
+        #007AFF 278deg,
+        #5856D6 308deg,
+        #AF52DE 360deg
+      );
+      filter: blur(14px);
+      opacity: 0.44;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .btn-glow-wrapper:hover .btn-glow-outer {
+      opacity: 0.56;
+      filter: blur(18px);
+    }
+
+    .btn-glow {
+      position: relative;
+      z-index: 1;
+      border: none !important;
+    }
+
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      padding: 1px;
+      background: conic-gradient(from 180deg,
+        #AF52DE 0deg,
+        #FF2D92 52deg,
+        #FF6482 82deg,
+        #FF9500 94deg,
+        #FFD60A 124deg,
+        #30D158 180deg,
+        #2EC4B6 236deg,
+        #40CBF0 266deg,
+        #007AFF 278deg,
+        #5856D6 308deg,
+        #AF52DE 360deg
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .btn-decline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      transition: all 0.2s;
+    }
+
+    .btn-decline:hover {
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .response-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .response-overlay.visible {
+      display: flex;
+    }
+
+    .calendar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+      border: 1px solid rgba(139, 241, 241, 0.3);
+      background: rgba(139, 241, 241, 0.1);
+      transition: all 0.2s;
+    }
+
+    .calendar-btn:hover {
+      background: rgba(139, 241, 241, 0.2);
+      border-color: rgba(139, 241, 241, 0.5);
+    }
+
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 15px;
+    }
+
+    .detail-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body class="bg-black min-h-screen font-sans overflow-x-hidden">
+
+  <!-- Background Image -->
+  <div class="fixed inset-0">
+    <img src="../assets/background.png" alt="" class="w-full h-full object-cover opacity-55 pointer-events-none">
+  </div>
+
+  <!-- Main Content -->
+  <div class="relative z-10 min-h-screen flex items-center justify-center px-4 py-8">
+
+    <!-- RSVP Card -->
+    <div class="relative w-full max-w-[555px] rounded-[24px] overflow-hidden px-6 sm:px-[44px] py-[32px]" style="background: rgba(12, 16, 32, 0.35); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid transparent; border-top-color: rgba(255, 255, 255, 0.25); border-left-color: rgba(255, 255, 255, 0.14); border-right-color: rgba(255, 255, 255, 0.05); border-bottom-color: rgba(255, 255, 255, 0.02); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);">
+
+      <!-- Form Texture Overlay -->
+      <img src="../assets/form-texture.png" alt="" class="absolute inset-0 w-full h-full object-cover opacity-5 pointer-events-none rounded-[24px]">
+
+      <!-- Card Content -->
+      <div class="relative z-10 flex flex-col items-center gap-[24px]">
+
+        <!-- RSVP Pill -->
+        <div class="px-4 py-1 rounded-full text-[14px] font-bold uppercase tracking-[0.15em]" style="background: linear-gradient(135deg, rgba(139, 241, 241, 0.15), rgba(95, 252, 192, 0.15)); border: 1px solid rgba(139, 241, 241, 0.3); color: #8BF1F1;">
+          RSVP
+        </div>
+
+        <!-- Title -->
+        <h1 class="gradient-title font-semibold text-[26px] sm:text-[36px] text-center w-full leading-tight -mt-2">
+          School of AI
+        </h1>
+
+        <!-- Subtitle -->
+        <p id="subtitle" class="text-white text-[16px] font-semibold text-center w-full">
+          Will you be there?
+        </p>
+
+        <!-- Event Details -->
+        <div class="w-full flex flex-col gap-[12px] py-2">
+          <!-- 2-column: Date + Time -->
+          <div class="flex gap-[24px] justify-center">
+            <div class="flex items-center gap-2 text-white/80 text-[14px]">
+              <svg class="w-[18px] h-[18px] flex-shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <path d="M16 2v4M8 2v4M3 10h18"/>
+              </svg>
+              <span>TONIGHT - Thursday, March 19th</span>
+            </div>
+            <div class="flex items-center gap-2 text-white/80 text-[14px]">
+              <svg class="w-[18px] h-[18px] flex-shrink-0 opacity-70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              <span>7:00 PM EST</span>
+            </div>
+          </div>
+          <!-- Zoom row centered -->
+          <div class="flex items-center justify-center gap-2 text-white/80 text-[14px] py-1">
+            <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="5" fill="#2D8CFF"/>
+              <path d="M5 8.5C5 7.67 5.67 7 6.5 7H13.5C14.33 7 15 7.67 15 8.5V15.5C15 16.33 14.33 17 13.5 17H6.5C5.67 17 5 16.33 5 15.5V8.5Z" fill="white"/>
+              <path d="M15.5 10L19 7.5V16.5L15.5 14V10Z" fill="white"/>
+            </svg>
+            <span>Live on Zoom</span>
+          </div>
+        </div>
+
+        <!-- Only 3 Mondays Left Badge -->
+        <div class="px-4 py-2 rounded-full text-[13px] font-semibold text-[#FFD60A]" style="background: rgba(255, 214, 10, 0.1); border: 1px solid rgba(255, 214, 10, 0.2);">
+          Only 3 sessions left!
+        </div>
+
+        <!-- Buttons -->
+        <div class="w-full flex flex-col gap-[12px] mt-2">
+          <!-- I'll Be There -->
+          <div class="btn-glow-wrapper">
+            <div class="btn-glow-outer"></div>
+            <button id="btn-yes" class="btn-glow w-full h-[56px] rounded-full flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-[0.98]" style="background: rgba(10, 14, 30, 0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);">
+              <span class="text-white font-semibold text-[18px]">I'll Be There</span>
+            </button>
+          </div>
+
+          <!-- Can't Make It -->
+          <button id="btn-no" class="btn-decline w-full h-[56px] rounded-full flex items-center justify-center cursor-pointer active:scale-[0.98]">
+            <span class="text-white/70 font-medium text-[16px]">Can't Make It</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Yes Response Overlay -->
+  <div class="response-overlay" id="yes-overlay">
+    <div class="text-center p-8 max-w-md">
+      <div class="text-[48px] mb-4">&#10003;</div>
+      <h2 class="gradient-title font-semibold text-[28px] sm:text-[36px] mb-4">See You Tonight!</h2>
+      <p class="text-white text-[16px] mb-6">We've got your RSVP. Add it to your calendar so you don't forget.</p>
+
+      <!-- Calendar Link -->
+      <a id="ical-link" href="#" download="school-of-ai.ics" class="calendar-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+        Add to Calendar
+      </a>
+
+      <!-- Share with a friend -->
+      <div class="mt-8">
+        <p class="text-white/60 text-[13px] uppercase tracking-wider font-semibold mb-3">Share with a friend</p>
+        <div class="flex items-center gap-2 rounded-full px-4 py-3 mx-auto max-w-[340px]" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">
+          <input id="share-link" type="text" readonly class="bg-transparent text-white text-[14px] flex-1 outline-none min-w-0" value="https://school.endlesswinning.com">
+          <button id="copy-btn" class="text-[#5FFCC0] text-[14px] font-bold whitespace-nowrap cursor-pointer" style="background:none;border:none;">Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Response Overlay -->
+  <div class="response-overlay" id="no-overlay">
+    <div class="text-center p-8 max-w-md">
+      <div class="text-[48px] mb-4">&#128075;</div>
+      <h2 class="gradient-title font-semibold text-[28px] sm:text-[36px] mb-4">We'll Miss You!</h2>
+      <p class="text-white text-[16px] mb-6">No worries — we'll catch you next time. Only 3 sessions left though!</p>
+      <button id="changed-mind" class="px-8 py-3 rounded-full font-semibold text-white text-[16px] cursor-pointer" style="background: rgba(139, 241, 241, 0.15); border: 1px solid rgba(139, 241, 241, 0.3);">
+        Actually, I'll be there!
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Get contact ID from URL path or query param
+    const params = new URLSearchParams(window.location.search);
+    const pathId = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    const contactId = params.get('id') || (pathId && /^[a-zA-Z0-9]+$/.test(pathId) ? pathId : '') || '';
+    let phone = '';
+
+    // If no contact ID, redirect to signup (only on production)
+    const isLocal = window.location.protocol === 'file:' || window.location.hostname === 'localhost';
+    if (!contactId && !isLocal) {
+      window.location.href = 'https://school.endlesswinning.com';
+    }
+
+    // Supabase config
+    const SUPABASE_URL = 'https://lrwvooucggciazmzxqlb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxyd3Zvb3VjZ2djaWF6bXp4cWxiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU3ODc5MjAsImV4cCI6MjA3MTM2MzkyMH0.xEnYGKLz2kql5ZK1xQnxq_BpkfoZMj6jBbhDpU5I-RI';
+
+    // GHL contact lookup — personalize or redirect
+    (async function() {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/functions/v1/school-rsvp-lookup?id=${encodeURIComponent(contactId)}`, {
+          headers: { 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
+        });
+        const data = await res.json();
+
+        if (!data.found && !isLocal) {
+          window.location.href = 'https://school.endlesswinning.com';
+          return;
+        }
+
+        // Store phone from lookup for RSVP logging
+        if (data.phone) phone = data.phone;
+
+        // Personalize the subtitle
+        if (data.firstName) {
+          const name = data.firstName.charAt(0).toUpperCase() + data.firstName.slice(1).toLowerCase();
+          document.getElementById('subtitle').textContent = `Hey ${name}, will you be there?`;
+        }
+
+        // Set referral share link
+        if (data.referralCode) {
+          document.getElementById('share-link').value = `https://school.endlesswinning.com?ref=${data.referralCode}`;
+        }
+      } catch (err) {
+        console.error('Lookup failed:', err);
+        // On error, still show the page (graceful degradation)
+      }
+    })();
+
+    // Event details for calendar
+    const EVENT = {
+      title: 'School of AI',
+      date: '20260319',       // YYYYMMDD
+      startTime: '190000',    // HHMMSS in EST (UTC-4 in March = EDT)
+      endTime: '203000',      // 90 min session
+      utcStart: '20260319T230000Z',
+      utcEnd: '20260320T003000Z',
+      location: 'Zoom',
+      description: 'School of AI - Live Tonight!\\nhttps://schoolzoom.endlesswinning.com',
+      url: 'https://schoolzoom.endlesswinning.com'
+    };
+
+    // Build Google Calendar link
+    function buildGCalLink() {
+      const params = new URLSearchParams({
+        action: 'TEMPLATE',
+        text: EVENT.title,
+        dates: `${EVENT.utcStart}/${EVENT.utcEnd}`,
+        details: `School of AI - TONIGHT\n${EVENT.url}`,
+        location: EVENT.location,
+      });
+      return `https://calendar.google.com/calendar/render?${params.toString()}`;
+    }
+
+    // Build .ics file for Apple Calendar
+    function buildICSLink() {
+      const ics = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        `DTSTART:${EVENT.utcStart}`,
+        `DTEND:${EVENT.utcEnd}`,
+        `SUMMARY:${EVENT.title}`,
+        `DESCRIPTION:School of AI - TONIGHT\\n${EVENT.url}`,
+        `LOCATION:${EVENT.location}`,
+        `URL:${EVENT.url}`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      return 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+    }
+
+    // Set calendar link
+    document.getElementById('ical-link').href = buildICSLink();
+
+    // Log RSVP to Supabase
+    async function logRSVP(response) {
+      try {
+        await fetch(`${SUPABASE_URL}/rest/v1/rsvp_responses?on_conflict=phone,event_date`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+            'Prefer': 'resolution=merge-duplicates'
+          },
+          body: JSON.stringify({
+            phone: phone || contactId,
+            response: response,
+            event_date: '2026-03-19',
+            responded_at: new Date().toISOString()
+          })
+        });
+      } catch (err) {
+        console.error('RSVP log error:', err);
+      }
+    }
+
+    // Button handlers
+    document.getElementById('btn-yes').addEventListener('click', async () => {
+      await logRSVP('yes');
+      document.getElementById('yes-overlay').classList.add('visible');
+    });
+
+    document.getElementById('btn-no').addEventListener('click', async () => {
+      await logRSVP('no');
+      document.getElementById('no-overlay').classList.add('visible');
+    });
+
+    // Changed mind button
+    document.getElementById('changed-mind').addEventListener('click', async () => {
+      document.getElementById('no-overlay').classList.remove('visible');
+      await logRSVP('yes');
+      document.getElementById('yes-overlay').classList.add('visible');
+    });
+
+    // Copy share link
+    document.getElementById('copy-btn').addEventListener('click', () => {
+      const input = document.getElementById('share-link');
+      navigator.clipboard.writeText(input.value);
+      document.getElementById('copy-btn').textContent = 'Copied!';
+      setTimeout(() => document.getElementById('copy-btn').textContent = 'Copy', 2000);
+    });
+  </script>
+</body>
+</html>
